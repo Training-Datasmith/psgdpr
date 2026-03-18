@@ -37,11 +37,6 @@ class LoggerService
      */
     private $LoggerRepository;
 
-    /**
-     * @param LoggerRepository $LoggerRepository
-     *
-     * @return void
-     */
     public function __construct(LoggerRepository $LoggerRepository)
     {
         $this->LoggerRepository = $LoggerRepository;
@@ -50,17 +45,11 @@ class LoggerService
     /**
      * Create log
      *
-     * @param int $customerId
-     * @param int $requestType
-     * @param int $moduleId
-     * @param int $guestId
-     * @param string $clientData
      *
      * @throws Exception
      *
-     * @return void
      */
-    public function createLog(int $customerId, int $requestType, int $moduleId, int $guestId = 0, $clientData = ''): void
+    public function createLog(int $customerId, int $requestType, int $moduleId, int $guestId = 0, string $clientData = ''): void
     {
         try {
             $log = new PsgdprLog();
@@ -77,8 +66,6 @@ class LoggerService
 
     /**
      * Get logs
-     *
-     * @return array
      */
     public function getLogs(): array
     {

@@ -35,9 +35,7 @@ class ConsentRepository extends ServiceEntityRepository
     /**
      * Add consent to database
      *
-     * @param PsgdprConsent $psgdprConsent
      *
-     * @return void
      */
     public function createOrUpdateConsent(PsgdprConsent $psgdprConsent): void
     {
@@ -69,7 +67,6 @@ class ConsentRepository extends ServiceEntityRepository
     /**
      * Find consent by module id
      *
-     * @param int $moduleId
      *
      * @return object|null
      */
@@ -82,8 +79,6 @@ class ConsentRepository extends ServiceEntityRepository
 
     /**
      * Find all registered modules for GDPR
-     *
-     * @return array
      */
     public function findAllRegisteredModules(): array
     {
@@ -102,10 +97,7 @@ class ConsentRepository extends ServiceEntityRepository
     /**
      * Find consent message for module
      *
-     * @param int $moduleId
-     * @param int $langId
      *
-     * @return string
      */
     public function findModuleConsentMessage(int $moduleId, int $langId): string
     {
@@ -122,15 +114,13 @@ class ConsentRepository extends ServiceEntityRepository
         $queryResult = $query->execute();
         $data = $queryResult->fetchOne();
 
-        return $data ? $data : '';
+        return $data ?: '';
     }
 
     /**
      * Find consent active for module
      *
-     * @param int $moduleId
      *
-     * @return bool
      */
     public function findModuleConsentIsActive(int $moduleId): bool
     {
@@ -150,9 +140,7 @@ class ConsentRepository extends ServiceEntityRepository
     /**
      * Find consent exist for module
      *
-     * @param int $moduleId
      *
-     * @return bool
      */
     public function findModuleConsentExist(int $moduleId): bool
     {

@@ -91,25 +91,17 @@ class PsgdprLog
      */
     private $updatedAt;
 
-    /**
-     * @return int
-     */
     public function getId(): int
     {
         return $this->id;
     }
 
-    /**
-     * @return int
-     */
     public function getCustomerId(): int
     {
         return $this->customerId;
     }
 
     /**
-     * @param int $customerId
-     *
      * @return $this
      */
     public function setCustomerId(int $customerId): self
@@ -119,17 +111,12 @@ class PsgdprLog
         return $this;
     }
 
-    /**
-     * @return int
-     */
     public function getGuestId(): int
     {
         return $this->guestId;
     }
 
     /**
-     * @param int $guestId
-     *
      * @return $this
      */
     public function setGuestId(int $guestId): self
@@ -139,17 +126,12 @@ class PsgdprLog
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getClientData(): string
     {
         return $this->clientData;
     }
 
     /**
-     * @param string $clientData
-     *
      * @return $this
      */
     public function setClientData(string $clientData): self
@@ -159,17 +141,12 @@ class PsgdprLog
         return $this;
     }
 
-    /**
-     * @return int
-     */
     public function getModuleId(): int
     {
         return $this->moduleId;
     }
 
     /**
-     * @param int $moduleId
-     *
      * @return $this
      */
     public function setModuleId(int $moduleId): self
@@ -180,8 +157,6 @@ class PsgdprLog
     }
 
     /**
-     * @param int $requestType
-     *
      * @return $this
      */
     public function setRequestType(int $requestType): self
@@ -193,9 +168,6 @@ class PsgdprLog
         return $this;
     }
 
-    /**
-     * @return int
-     */
     public function getRequestType(): int
     {
         return $this->requestType;
@@ -210,8 +182,6 @@ class PsgdprLog
     }
 
     /**
-     * @param DateTime $createdAt
-     *
      * @return $this
      */
     private function setCreatedAt(DateTime $createdAt): self
@@ -221,17 +191,12 @@ class PsgdprLog
         return $this;
     }
 
-    /**
-     * @return \DateTime
-     */
     public function getUpdatedAt(): DateTime
     {
         return $this->updatedAt;
     }
 
     /**
-     * @param DateTime $updatedAt
-     *
      * @return $this
      */
     private function setUpdatedAt(DateTime $updatedAt): self
@@ -259,9 +224,7 @@ class PsgdprLog
     /**
      * Asserts that request type is valid
      *
-     * @param int $requestType
      *
-     * @return void
      *
      * @throws InvalidArgumentException
      */

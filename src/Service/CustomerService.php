@@ -93,17 +93,7 @@ class CustomerService
     /**
      * CustomerService constructor.
      *
-     * @param Psgdpr $module
-     * @param Context $context
-     * @param CartRepository $cartRepository
-     * @param CartRuleRepository $cartRuleRepository
-     * @param CustomerRepository $customerRepository
-     * @param CommandBusInterface $commandBus
-     * @param CommandBusInterface $queryBus
-     * @param DefaultGroupsProviderInterface $defaultGroupProvider
-     * @param Hashing $hashing
      *
-     * @return void
      */
     public function __construct(
         Psgdpr $module,
@@ -130,11 +120,10 @@ class CustomerService
     /**
      * Delete customer data from Prestashop
      *
-     * @param CustomerId $customerId
      *
      * @throws DeleteException
      */
-    public function deleteCustomerDataFromPrestashop(CustomerId $customerId)
+    public function deleteCustomerDataFromPrestashop(CustomerId $customerId): void
     {
         $anonymousCustomerInfos = $this->createAnonymousCustomer();
 
@@ -165,7 +154,7 @@ class CustomerService
      *
      * @throws DeleteException
      */
-    public function deleteCustomerDataFromModules($data)
+    public function deleteCustomerDataFromModules($data): void
     {
         $modulesList = Hook::getHookModuleExecList('actionDeleteGDPRCustomer');
 
@@ -182,8 +171,6 @@ class CustomerService
 
     /**
      * Find or create an anonymous customer
-     *
-     * @return array
      */
     private function createAnonymousCustomer(): array
     {

@@ -35,9 +35,7 @@ class FrontResponderForCsv extends FrontResponderContext implements FrontRespond
     /**
      * export customer data to csv
      *
-     * @param CustomerId $customerid
      *
-     * @return void
      */
     public function export(CustomerId $customerid): void
     {

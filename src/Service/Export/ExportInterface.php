@@ -22,15 +22,7 @@ namespace PrestaShop\Module\Psgdpr\Service\Export;
 
 interface ExportInterface
 {
-    /**
-     * @return string
-     */
     public function getData(array $customerData): string;
 
-    /**
-     * @param string $type
-     *
-     * @return bool
-     */
     public function supports(string $type): bool;
 }

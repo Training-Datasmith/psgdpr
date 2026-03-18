@@ -30,8 +30,6 @@ class ExportToCsv extends ExportContext implements ExportInterface
 
     /**
      * Generate CSV file from customer data
-     *
-     * @return string
      */
     public function getData(array $customerData): string
     {
@@ -69,10 +67,8 @@ class ExportToCsv extends ExportContext implements ExportInterface
      *
      * @param mixed $buffer
      * @param mixed $value
-     *
-     * @return void
      */
-    private function insertDataInCsv($buffer, $value)
+    private function insertDataInCsv($buffer, array $value): void
     {
         fputcsv($buffer, [strtoupper($value['name'])]);
         fputcsv($buffer, $value['headers']);

@@ -56,10 +56,7 @@ class ExportService
     /**
      * ExportService constructor.
      *
-     * @param Context $context
-     * @param TranslatorInterface $translator
      *
-     * @return void
      */
     public function __construct(Context $context, TranslatorInterface $translator)
     {
@@ -70,11 +67,9 @@ class ExportService
     /**
      * Transform customer data for export
      *
-     * @param CustomerId $customerId
      *
-     * @return string
      */
-    public function exportCustomerData(CustomerId $customerId, ExportInterface $exportStrategy)
+    public function exportCustomerData(CustomerId $customerId, ExportInterface $exportStrategy): string
     {
         $customer = new Customer($customerId->getValue());
 
@@ -84,7 +79,7 @@ class ExportService
         return $exportStrategy->getData($exportData);
     }
 
-    public function getPrestashopInformations(Customer $customer)
+    public function getPrestashopInformations(Customer $customer): array
     {
         return [
             'personalinformations' => $this->getPersonalInformations($customer),
@@ -104,7 +99,6 @@ class ExportService
     /**
      * @param mixed $customer
      *
-     * @return array
      *
      * @throws PrestaShopException
      */
@@ -157,9 +151,7 @@ class ExportService
     /**
      * Get customer personal informations
      *
-     * @param Customer $customer
      *
-     * @return array
      */
     private function getPersonalInformations(Customer $customer): array
     {
@@ -222,9 +214,7 @@ class ExportService
     /**
      * Get customer addresses informations
      *
-     * @param Customer $customer
      *
-     * @return array
      */
     private function getAddressesInformations(Customer $customer): array
     {
@@ -242,7 +232,7 @@ class ExportService
                 $this->translator->trans('Country name', [], 'Modules.Psgdpr.Admin'),
                 $this->translator->trans('Date add', [], 'Modules.Psgdpr.Admin'),
             ],
-            'data' => array_map(function ($address) {
+            'data' => array_map(function (array $address): array {
                 $fullName = "{$address['firstname']} {$address['lastname']}";
                 $fullAddress = "{$address['address1']} {$address['address2']} {$address['postcode']} {$address['city']}";
 
@@ -263,9 +253,7 @@ class ExportService
     /**
      * Get customer orders informations
      *
-     * @param Customer $customer
      *
-     * @return array
      */
     private function getOrdersInformations(Customer $customer): array
     {
@@ -280,7 +268,7 @@ class ExportService
                 $this->translator->trans('Total paid with taxes', [], 'Modules.Psgdpr.Admin'),
                 $this->translator->trans('Date of order', [], 'Modules.Psgdpr.Admin'),
             ],
-            'data' => array_map(function ($order) {
+            'data' => array_map(function (array $order): array {
                 $currency = Currency::getCurrency($order['id_currency']);
                 $totalPaid = number_format($order['total_paid_tax_incl'], 2) . ' ' . $currency['iso_code'];
 
@@ -298,9 +286,7 @@ class ExportService
     /**
      * Get customer discounts informations
      *
-     * @param Customer $customer
      *
-     * @return array
      */
     private function getProductsOrderedInformations(Customer $customer): array
     {
@@ -311,7 +297,7 @@ class ExportService
             $currentOrder = new Order($order['id_order']);
             $productsInOrder = $currentOrder->getProducts();
 
-            $productsOrdered += array_map(function ($product) use ($currentOrder) {
+            $productsOrdered += array_map(function (array $product) use ($currentOrder): array {
                 return [
                     'orderReference' => $currentOrder->reference,
                     'reference' => $product['product_reference'],
@@ -336,9 +322,7 @@ class ExportService
     /**
      * Get customer carts informations
      *
-     * @param Customer $customer
      *
-     * @return array
      */
     private function getCartsInformations(Customer $customer): array
     {
@@ -351,7 +335,7 @@ class ExportService
                 $this->translator->trans('Total', [], 'Modules.Psgdpr.Admin'),
                 $this->translator->trans('Creation date', [], 'Modules.Psgdpr.Admin'),
             ],
-            'data' => array_map(function ($cart) {
+            'data' => array_map(function (array $cart): array {
                 $currentCart = new Cart($cart['id_cart']);
                 $productsCart = $currentCart->getProducts();
 
@@ -367,9 +351,7 @@ class ExportService
     /**
      * Get customer products in cart informations
      *
-     * @param Customer $customer
      *
-     * @return array
      */
     private function getProductsInCartInformation(Customer $customer): array
     {
@@ -380,7 +362,7 @@ class ExportService
             $currentCart = new Cart($cart['id_cart']);
             $productsList = $currentCart->getProducts();
 
-            $productsInCart += array_map(function ($product) use ($currentCart) {
+            $productsInCart += array_map(function (array $product) use ($currentCart): array {
                 return [
                     'cartId' => $currentCart->id,
                     'reference' => $product['reference'],
@@ -405,9 +387,7 @@ class ExportService
     /**
      * Get customer messages informations
      *
-     * @param Customer $customer
      *
-     * @return array
      */
     private function getMessagesInformations(Customer $customer): array
     {
@@ -420,7 +400,7 @@ class ExportService
                 $this->translator->trans('Message', [], 'Modules.Psgdpr.Admin'),
                 $this->translator->trans('Creation date', [], 'Modules.Psgdpr.Admin'),
             ],
-            'data' => array_map(function ($message) {
+            'data' => array_map(function (array $message): array {
                 $ipAddress = $message['ip_address'];
 
                 if ((int) $message['ip_address'] == $message['ip_address']) {
@@ -439,9 +419,7 @@ class ExportService
     /**
      * Get customer last connections informations
      *
-     * @param Customer $customer
      *
-     * @return array
      */
     private function getLastConnectionsInformations(Customer $customer): array
     {
@@ -457,7 +435,7 @@ class ExportService
                 $this->translator->trans('Ip address', [], 'Modules.Psgdpr.Admin'),
                 $this->translator->trans('Date', [], 'Modules.Psgdpr.Admin'),
             ],
-            'data' => array_map(function ($connection) {
+            'data' => array_map(function (array $connection): array {
                 $ipAddress = $connection['ipaddress'];
 
                 if ((int) $connection['ipaddress'] == $connection['ipaddress']) {
@@ -479,9 +457,7 @@ class ExportService
     /**
      * Get customer discounts informations
      *
-     * @param Customer $customer
      *
-     * @return array
      */
     private function getDiscountsInformations(Customer $customer): array
     {
@@ -495,7 +471,7 @@ class ExportService
                 $this->translator->trans('Name', [], 'Modules.Psgdpr.Admin'),
                 $this->translator->trans('Description', [], 'Modules.Psgdpr.Admin'),
             ],
-            'data' => array_map(function ($discount) {
+            'data' => array_map(function (array $discount): array {
                 return [
                     'discountId' => $discount['id_cart_rule'],
                     'code' => $discount['code'],
@@ -509,9 +485,7 @@ class ExportService
     /**
      * Get customer sent emails informations
      *
-     * @param Customer $customer
      *
-     * @return array
      */
     private function getLastSentEmailsInformations(Customer $customer): array
     {
@@ -525,7 +499,7 @@ class ExportService
                 $this->translator->trans('Subject', [], 'Modules.Psgdpr.Admin'),
                 $this->translator->trans('Template', [], 'Modules.Psgdpr.Admin'),
             ],
-            'data' => array_map(function ($email) {
+            'data' => array_map(function (array $email): array {
                 return [
                     'creationDate' => Tools::displayDate($email['date_add'], true),
                     'language' => $email['language'],
@@ -539,9 +513,7 @@ class ExportService
     /**
      * Get customer groups informations
      *
-     * @param Customer $customer
      *
-     * @return array
      */
     private function getGroupsInformations(Customer $customer): array
     {
@@ -553,7 +525,7 @@ class ExportService
                 $this->translator->trans('Id', [], 'Modules.Psgdpr.Admin'),
                 $this->translator->trans('Name', [], 'Modules.Psgdpr.Admin'),
             ],
-            'data' => array_map(function ($groupId) {
+            'data' => array_map(function ($groupId): array {
                 $currentGroup = new Group($groupId);
                 $languageId = $this->context->language->id;
 

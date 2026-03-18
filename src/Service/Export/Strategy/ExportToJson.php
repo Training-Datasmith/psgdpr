@@ -29,8 +29,6 @@ use PrestaShop\Module\Psgdpr\Service\Export\ExportInterface;
 
      /**
       * Generate PDF file from customer data
-      *
-      * @return string
       */
      public function getData(array $customerData): string
      {

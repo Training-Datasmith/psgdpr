@@ -33,9 +33,7 @@ class BackResponderByEmail extends BackResponderContext implements BackResponder
     /**
      * export customer data
      *
-     * @param string $data
      *
-     * @return Response
      */
     public function export(string $data): Response
     {
@@ -47,9 +45,7 @@ class BackResponderByEmail extends BackResponderContext implements BackResponder
     /**
      * delete customer data
      *
-     * @param string $data
      *
-     * @return Response
      */
     public function delete(string $data): Response
     {

@@ -33,8 +33,6 @@ class OrderRepository
 
     /**
      * OrderRepository constructor.
-     *
-     * @param Connection $connection
      */
     public function __construct(Connection $connection)
     {
@@ -44,9 +42,7 @@ class OrderRepository
     /**
      * Find customer cart products by customer id
      *
-     * @param CustomerId $customerId
      *
-     * @return array
      */
     public function findProductsCartsNotOrderedByCustomerId(CustomerId $customerId): array
     {

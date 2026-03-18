@@ -24,20 +24,9 @@ use Symfony\Component\HttpFoundation\Response;
 
 interface BackResponderInterface
 {
-    /**
-     * @return Response
-     */
     public function export(string $data): Response;
 
-    /**
-     * @return Response
-     */
     public function delete(string $data): Response;
 
-    /**
-     * @param string $type
-     *
-     * @return bool
-     */
     public function supports(string $type): bool;
 }

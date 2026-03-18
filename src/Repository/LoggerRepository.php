@@ -34,11 +34,9 @@ class LoggerRepository extends ServiceEntityRepository
     /**
      * Add log to database
      *
-     * @param PsgdprLog $log
      *
-     * @return void
      */
-    public function add(PsgdprLog $log)
+    public function add(PsgdprLog $log): void
     {
         $this->getEntityManager()->persist($log);
         $this->getEntityManager()->flush();
@@ -46,8 +44,6 @@ class LoggerRepository extends ServiceEntityRepository
 
     /**
      * Get all logs
-     *
-     * @return array
      */
     public function findAll(): array
     {

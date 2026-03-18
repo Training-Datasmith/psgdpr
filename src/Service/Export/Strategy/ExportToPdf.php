@@ -32,8 +32,6 @@ class ExportToPdf extends ExportContext implements ExportInterface
 
     /**
      * Generate PDF file from customer data
-     *
-     * @return string
      */
     public function getData(array $customerData): string
     {

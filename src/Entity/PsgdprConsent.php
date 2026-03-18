@@ -93,17 +93,12 @@ class PsgdprConsent
         $this->consentLangs = new ArrayCollection();
     }
 
-    /**
-     * @return int
-     */
     public function getId(): int
     {
         return $this->id;
     }
 
     /**
-     * @param int $id
-     *
      * @return $this
      */
     public function setId(int $id): self
@@ -122,8 +117,6 @@ class PsgdprConsent
     }
 
     /**
-     * @param ArrayCollection $consentLangs
-     *
      * @return $this
      */
     public function setConsentLangs(ArrayCollection $consentLangs): self
@@ -134,8 +127,6 @@ class PsgdprConsent
     }
 
     /**
-     * @param PsgdprConsentLang $consentLang
-     *
      * @return $this
      */
     public function addConsentLang(PsgdprConsentLang $consentLang): self
@@ -147,17 +138,12 @@ class PsgdprConsent
         return $this;
     }
 
-    /**
-     * @return int
-     */
     public function getModuleId(): int
     {
         return $this->moduleId;
     }
 
     /**
-     * @param int $moduleId
-     *
      * @return $this
      */
     public function setModuleId(int $moduleId): self
@@ -167,17 +153,12 @@ class PsgdprConsent
         return $this;
     }
 
-    /**
-     * @return bool
-     */
     public function isActive(): bool
     {
         return $this->active;
     }
 
     /**
-     * @param bool $active
-     *
      * @return $this
      */
     public function setActive(bool $active): self
@@ -187,17 +168,12 @@ class PsgdprConsent
         return $this;
     }
 
-    /**
-     * @return bool
-     */
     public function isError(): bool
     {
         return $this->error;
     }
 
     /**
-     * @param bool $error
-     *
      * @return $this
      */
     public function setError(bool $error): self
@@ -207,17 +183,12 @@ class PsgdprConsent
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getErrorMessage(): string
     {
         return $this->errorMessage;
     }
 
     /**
-     * @param string $errorMessage
-     *
      * @return $this
      */
     public function setErrorMessage(string $errorMessage): self
@@ -227,9 +198,6 @@ class PsgdprConsent
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getConsentContent(): string
     {
         if ($this->consentLangs->count() <= 0) {
@@ -250,8 +218,6 @@ class PsgdprConsent
     }
 
     /**
-     * @param DateTime $createdAt
-     *
      * @return $this
      */
     private function setCreatedAt(DateTime $createdAt): self
@@ -261,17 +227,12 @@ class PsgdprConsent
         return $this;
     }
 
-    /**
-     * @return \DateTime
-     */
     public function getUpdatedAt(): DateTime
     {
         return $this->updatedAt;
     }
 
     /**
-     * @param DateTime $updatedAt
-     *
      * @return $this
      */
     private function setUpdatedAt(DateTime $updatedAt): self

@@ -32,8 +32,6 @@ class OrderInvoiceRepository
 
     /**
      * OrderRepository constructor.
-     *
-     * @param Connection $connection
      */
     public function __construct(Connection $connection)
     {
@@ -43,9 +41,7 @@ class OrderInvoiceRepository
     /**
      * Find customer cart products by customer id
      *
-     * @param CustomerId $customerId
      *
-     * @return bool
      */
     public function findIfInvoicesExistByCustomerId(CustomerId $customerId): bool
     {
@@ -69,9 +65,7 @@ class OrderInvoiceRepository
     /**
      * Find customer cart products by customer id
      *
-     * @param CustomerId $customerId
      *
-     * @return array
      */
     public function findAllInvoicesByCustomerId(CustomerId $customerId): array
     {

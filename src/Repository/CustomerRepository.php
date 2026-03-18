@@ -33,8 +33,6 @@ class CustomerRepository
 
     /**
      * CustomerRepository constructor.
-     *
-     * @param Connection $connection
      */
     public function __construct(Connection $connection)
     {
@@ -44,9 +42,7 @@ class CustomerRepository
     /**
      * Find customer name by customer id
      *
-     * @param CustomerId $customerId
      *
-     * @return string
      */
     public function findCustomerNameByCustomerId(CustomerId $customerId): string
     {
@@ -68,7 +64,6 @@ class CustomerRepository
     /**
      * Find customer id by email
      *
-     * @param string $email
      *
      * @return int|bool
      */

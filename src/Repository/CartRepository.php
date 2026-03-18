@@ -33,8 +33,6 @@ class CartRepository
 
     /**
      * CartRepository constructor.
-     *
-     * @param Connection $connection
      */
     public function __construct(Connection $connection)
     {
@@ -44,9 +42,7 @@ class CartRepository
     /**
      * Find customer carts by customer id
      *
-     * @param CustomerId $customerId
      *
-     * @return array
      */
     public function findCartsByCustomerId(CustomerId $customerId): array
     {
@@ -69,11 +65,7 @@ class CartRepository
     /**
      * Anonymize customer cart by customer id
      *
-     * @param CustomerId $customerIdToAnonymize
-     * @param CustomerId $anonymousCustomerId
-     * @param AddressId $anonymousAddressId
      *
-     * @return bool
      */
     public function anonymizeCustomerCartByCustomerId(
         CustomerId $customerIdToAnonymize,

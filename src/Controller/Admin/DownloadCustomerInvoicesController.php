@@ -46,12 +46,10 @@ class DownloadCustomerInvoicesController extends FrameworkBundleAdminController
     /**
      * Endpoint to retrieve all pdf invoices from a specific customer
      *
-     * @param Request $request
-     * @param int $customerId
      *
      * @throws DownloadInvoicesFailedException
      */
-    public function downloadInvoicesByCustomerId(Request $request, int $customerId)
+    public function downloadInvoicesByCustomerId(Request $request, int $customerId): void
     {
         $customerId = new CustomerId($customerId);
 
@@ -69,11 +67,9 @@ class DownloadCustomerInvoicesController extends FrameworkBundleAdminController
     }
 
     /**
-     * @param CustomerId $customerId
-     *
      * @throws CustomerHasNotInvoicesException
      */
-    private function assertThatCustomerHasInvoicesBeforeDownload(CustomerId $customerId)
+    private function assertThatCustomerHasInvoicesBeforeDownload(CustomerId $customerId): void
     {
         $customerHasInvoices = $this->orderInvoiceRepository->findIfInvoicesExistByCustomerId($customerId);
 

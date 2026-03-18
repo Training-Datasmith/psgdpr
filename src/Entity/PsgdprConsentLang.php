@@ -58,17 +58,12 @@ class PsgdprConsentLang
      */
     private $shopId;
 
-    /**
-     * @return PsgdprConsent
-     */
     public function getConsent(): PsgdprConsent
     {
         return $this->consent;
     }
 
     /**
-     * @param PsgdprConsent $consent
-     *
      * @return $this
      */
     public function setConsent(PsgdprConsent $consent): self
@@ -78,17 +73,12 @@ class PsgdprConsentLang
         return $this;
     }
 
-    /**
-     * @return Lang
-     */
     public function getLang(): Lang
     {
         return $this->lang;
     }
 
     /**
-     * @param Lang $lang
-     *
      * @return $this
      */
     public function setLang(Lang $lang): self
@@ -98,17 +88,12 @@ class PsgdprConsentLang
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getMessage(): string
     {
         return $this->message;
     }
 
     /**
-     * @param string $message
-     *
      * @return $this
      */
     public function setMessage(string $message): self
@@ -118,17 +103,12 @@ class PsgdprConsentLang
         return $this;
     }
 
-    /**
-     * @return int
-     */
     public function getShopId(): int
     {
         return $this->shopId;
     }
 
     /**
-     * @param int $shopId
-     *
      * @return $this
      */
     public function setShopId(int $shopId): self

@@ -24,15 +24,7 @@ use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\CustomerId;
 
 interface FrontResponderInterface
 {
-    /**
-     * @return void
-     */
     public function export(CustomerId $customerId): void;
 
-    /**
-     * @param string $type
-     *
-     * @return bool
-     */
     public function supports(string $type): bool;
 }

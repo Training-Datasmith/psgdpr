@@ -49,13 +49,6 @@ class CustomerController extends FrameworkBundleAdminController
      */
     private $BackResponderFactory;
 
-    /**
-     * @param CommandBusInterface $queryBus
-     * @param OrderInvoiceRepository $orderInvoiceRepository
-     * @param BackResponderFactory $BackResponderFactory
-     *
-     * @return void
-     */
     public function __construct(
         CommandBusInterface $queryBus,
         OrderInvoiceRepository $orderInvoiceRepository,
@@ -69,9 +62,7 @@ class CustomerController extends FrameworkBundleAdminController
     /**
      * Search customer by email
      *
-     * @param Request $request
      *
-     * @return Response
      */
     public function searchCustomers(Request $request): Response
     {
@@ -89,7 +80,7 @@ class CustomerController extends FrameworkBundleAdminController
             return $this->json(['message' => 'Customer not found'], Response::HTTP_NOT_FOUND);
         }
 
-        $customerList = array_map(function ($customer) {
+        $customerList = array_map(function (array $customer): array {
             return [
                 'idCustomer' => $customer['id_customer'],
                 'firstname' => $customer['firstname'],
@@ -106,9 +97,7 @@ class CustomerController extends FrameworkBundleAdminController
     /**
      * Delete User data by customer id
      *
-     * @param Request $request
      *
-     * @return Response
      */
     public function deleteCustomerData(Request $request): Response
     {
@@ -128,9 +117,7 @@ class CustomerController extends FrameworkBundleAdminController
     /**
      * Get user data for the given customer
      *
-     * @param Request $request
      *
-     * @return Response
      */
     public function getCustomerData(Request $request): Response
     {
@@ -150,10 +137,7 @@ class CustomerController extends FrameworkBundleAdminController
     /**
      * Generate link to DownloadCustomerInvoicesController in order to download invoices
      *
-     * @param Request $request
-     * @param int $customerId
      *
-     * @return Response
      */
     public function getDownloadInvoicesLinkByCustomerId(Request $request, int $customerId): Response
     {

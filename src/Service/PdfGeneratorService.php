@@ -48,7 +48,6 @@ class PdfGeneratorService extends HTMLTemplate
 
     /**
      * @param array $customerData
-     * @param Smarty $smarty
      */
     public function __construct($customerData, Smarty $smarty)
     {
@@ -119,7 +118,7 @@ class PdfGeneratorService extends HTMLTemplate
         $this->smarty->assign([
             'customerInfo' => [
                 'headers' => $this->customerData['personalinformations']['headers'],
-                'data' => array_map(function ($infos) {
+                'data' => array_map(function ($infos): array {
                     return array_values($infos);
                 }, $this->customerData['personalinformations']['data']),
             ],

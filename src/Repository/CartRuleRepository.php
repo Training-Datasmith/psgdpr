@@ -32,8 +32,6 @@ class CartRuleRepository
 
     /**
      * CartRuleRepository constructor.
-     *
-     * @param Connection $connection
      */
     public function __construct(Connection $connection)
     {
@@ -43,9 +41,7 @@ class CartRuleRepository
     /**
      * Delete cart rules by customer id
      *
-     * @param CustomerId $customerId
      *
-     * @return bool
      */
     public function deleteCartRulesByCustomerId(CustomerId $customerId): bool
     {
