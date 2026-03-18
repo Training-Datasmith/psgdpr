@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -26,7 +28,7 @@ use PrestaShop\Module\Psgdpr\Service\LoggerService;
 
 class ExportToCsv extends ExportContext implements ExportInterface
 {
-    const TYPE = 'csv';
+    public const TYPE = 'csv';
 
     /**
      * Generate CSV file from customer data

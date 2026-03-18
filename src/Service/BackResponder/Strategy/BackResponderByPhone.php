@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -28,7 +30,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 class BackResponderByPhone extends BackResponderContext implements BackResponderInterface
 {
-    const TYPE = 'phone';
+    public const TYPE = 'phone';
 
     /**
      * export customer data

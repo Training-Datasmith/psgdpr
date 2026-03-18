@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -29,7 +31,7 @@ use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\CustomerId;
 
 class FrontResponderForPdf extends FrontResponderContext implements FrontResponderInterface
 {
-    const TYPE = 'pdf';
+    public const TYPE = 'pdf';
 
     /**
      * export customer data to csv

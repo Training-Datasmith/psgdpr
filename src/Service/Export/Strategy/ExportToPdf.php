@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -28,7 +30,7 @@ use PrestaShop\Module\Psgdpr\Service\PdfGeneratorService;
 
 class ExportToPdf extends ExportContext implements ExportInterface
 {
-    const TYPE = 'pdf';
+    public const TYPE = 'pdf';
 
     /**
      * Generate PDF file from customer data

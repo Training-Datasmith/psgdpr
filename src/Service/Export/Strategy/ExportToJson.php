@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -23,20 +25,20 @@ namespace PrestaShop\Module\Psgdpr\Service\Export\Strategy;
 use PrestaShop\Module\Psgdpr\Service\Export\ExportContext;
 use PrestaShop\Module\Psgdpr\Service\Export\ExportInterface;
 
- class ExportToJson extends ExportContext implements ExportInterface
- {
-     const TYPE = 'json';
+class ExportToJson extends ExportContext implements ExportInterface
+{
+    public const TYPE = 'json';
 
-     /**
-      * Generate PDF file from customer data
-      */
-     public function getData(array $customerData): string
-     {
-         return json_encode($customerData);
-     }
+    /**
+     * Generate PDF file from customer data
+     */
+    public function getData(array $customerData): string
+    {
+        return json_encode($customerData);
+    }
 
-     public function supports(string $type): bool
-     {
-         return $type === self::TYPE;
-     }
- }
+    public function supports(string $type): bool
+    {
+        return $type === self::TYPE;
+    }
+}

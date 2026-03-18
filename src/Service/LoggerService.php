@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -27,10 +29,10 @@ use PrestaShop\Module\Psgdpr\Repository\LoggerRepository;
 
 class LoggerService
 {
-    const REQUEST_TYPE_CONSENT_COLLECTING = 1;
-    const REQUEST_TYPE_EXPORT_PDF = 2;
-    const REQUEST_TYPE_EXPORT_CSV = 3;
-    const REQUEST_TYPE_DELETE = 4;
+    public const REQUEST_TYPE_CONSENT_COLLECTING = 1;
+    public const REQUEST_TYPE_EXPORT_PDF = 2;
+    public const REQUEST_TYPE_EXPORT_CSV = 3;
+    public const REQUEST_TYPE_DELETE = 4;
 
     /**
      * @var LoggerRepository

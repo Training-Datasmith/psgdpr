@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use PrestaShop\Module\Psgdpr\Service\LoggerService;
 
 /**

@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -37,8 +39,8 @@ if (!defined('_PS_VERSION_')) {
 
 class Psgdpr extends Module
 {
-    const SQL_QUERY_TYPE_INSTALL = 'install';
-    const SQL_QUERY_TYPE_UNINSTALL = 'uninstall';
+    public const SQL_QUERY_TYPE_INSTALL = 'install';
+    public const SQL_QUERY_TYPE_UNINSTALL = 'uninstall';
 
     /**
      * @var array

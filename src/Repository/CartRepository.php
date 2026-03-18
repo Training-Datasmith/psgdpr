@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -54,8 +56,10 @@ class CartRepository
             ->leftJoin('cart', _DB_PREFIX_ . 'currency', 'currency', 'currency.id_currency = cart.id_currency')
             ->where('cart.id_customer = :id_customer')
             ->orderBy('cart.date_add', 'DESC')
-            ->setParameter('id_customer', $customerId->getValue()
-        );
+            ->setParameter(
+                'id_customer',
+                $customerId->getValue()
+            );
 
         $result = $query->execute();
 
