@@ -60,10 +60,10 @@ class psgdprExportCustomerDataModuleFrontController extends ModuleFrontControlle
     private function customerIsAuthenticated(): bool
     {
         $customer = Context::getContext()->customer;
-        $secure_key = sha1($customer->secure_key);
-        $token = Tools::getValue('token');
+        $secure_key = bin2hex(hash('sha256', $customer->secure_key, true));
+        $token = (string) Tools::getValue('token');
 
-        if ($customer->isLogged() === false || !isset($token) || $token != $secure_key) {
+        if ($customer->isLogged() === false || !isset($token) || !hash_equals($secure_key, $token)) {
             return false;
         }
 

@@ -53,7 +53,7 @@ class psgdprgdprModuleFrontController extends ModuleFrontController
         parent::initContent();
 
         $params = [
-            'token' => sha1($context->customer->secure_key),
+            'token' => bin2hex(hash('sha256', $context->customer->secure_key, true)),
         ];
 
         $this->context->smarty->assign([
