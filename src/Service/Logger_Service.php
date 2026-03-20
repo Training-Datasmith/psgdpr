@@ -40,11 +40,15 @@ class Logger_Service
         $this->logger_repository = $logger_repository;
     }
     /**
-     * Create log
+     * Creates a GDPR activity log entry for a customer action (consent, export, or deletion).
      *
+     * @param int    $customer_id  ID of the customer associated with this log entry
+     * @param int    $request_type Type of GDPR request (use REQUEST_TYPE_* constants)
+     * @param int    $module_id    ID of the module recording the log
+     * @param int    $guest_id     ID of the guest if the customer is not registered (default 0)
+     * @param string $client_data  Optional serialised client data to store with the log entry
      *
-     * @throws Exception
-     *
+     * @throws Add_Log_Exception If saving the log entry fails
      */
     public function create_log(int $customer_id, int $request_type, int $module_id, int $guest_id = 0, string $client_data = ''): void
     {

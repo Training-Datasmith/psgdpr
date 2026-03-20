@@ -62,9 +62,13 @@ class Export_Service
         $this->translator = $translator;
     }
     /**
-     * Transform customer data for export
+     * Collects all GDPR data for a customer (PrestaShop core + third-party module data)
+     * and serialises it using the given export strategy.
      *
+     * @param Customer_Id       $customer_id      ID of the customer to export
+     * @param Export_Interface  $export_strategy  Strategy that formats the data (CSV, PDF, etc.)
      *
+     * @return string Serialised customer data in the format produced by the export strategy
      */
     public function export_customer_data(Customer_Id $customer_id, Export_Interface $export_strategy): string
     {
@@ -73,6 +77,14 @@ class Export_Service
         $export_data['modules'] = $this->get_third_party_modules_informations($customer);
         return $export_strategy->get_data($export_data);
     }
+    /**
+     * Returns all PrestaShop core GDPR data for a customer, including personal info,
+     * addresses, orders, carts, messages, connections, discounts, sent emails, and groups.
+     *
+     * @param Customer $customer The customer to collect data for
+     *
+     * @return array<string, mixed> Map of data category name to data array
+     */
     public function get_prestashop_informations(Customer $customer): array
     {
         return ['personalinformations' => $this->get_personal_informations($customer), 'addresses' => $this->get_addresses_informations($customer), 'orders' => $this->get_orders_informations($customer), 'productsOrdered' => $this->get_products_ordered_informations($customer), 'carts' => $this->get_carts_informations($customer), 'productsInCart' => $this->get_products_in_cart_information($customer), 'messages' => $this->get_messages_informations($customer), 'lastConnections' => $this->get_last_connections_informations($customer), 'discounts' => $this->get_discounts_informations($customer), 'lastSentEmails' => $this->get_last_sent_emails_informations($customer), 'groups' => $this->get_groups_informations($customer)];

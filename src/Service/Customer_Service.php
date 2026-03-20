@@ -99,10 +99,12 @@ class Customer_Service
         $this->hashing = $hashing;
     }
     /**
-     * Delete customer data from Prestashop
+     * Anonymises and deletes all PrestaShop core data associated with the given customer.
+     * Carts are anonymised, cart rules are deleted, and the customer account is removed.
      *
+     * @param Customer_Id $customer_id ID of the customer whose data should be deleted
      *
-     * @throws DeleteException
+     * @throws DeleteException If any step of the deletion process fails
      */
     public function delete_customer_data_from_prestashop(Customer_Id $customer_id): void
     {
