@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare (strict_types=1);
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -19,14 +19,12 @@ declare(strict_types=1);
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License version 3.0
  */
+namespace Presta_Shop\Module\Psgdpr\Exception\Customer;
 
-namespace PrestaShop\Module\Psgdpr\Exception\Customer;
-
-use PrestaShop\Module\Psgdpr\Exception\PsgdprModuleException;
-
+use Presta_Shop\Module\Psgdpr\Exception\Psgdpr_Module_Exception;
 /**
  * Is thrown when customer is not found
  */
-class DeleteException extends PsgdprModuleException
+class Delete_Exception extends Psgdpr_Module_Exception
 {
 }

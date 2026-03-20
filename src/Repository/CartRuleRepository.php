@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare (strict_types=1);
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -19,19 +19,16 @@ declare(strict_types=1);
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License version 3.0
  */
-
-namespace PrestaShop\Module\Psgdpr\Repository;
+namespace Presta_Shop\Module\Psgdpr\Repository;
 
 use Doctrine\DBAL\Connection;
-use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\CustomerId;
-
-class CartRuleRepository
+use Presta_Shop\Presta_Shop\Core\Domain\Customer\Value_Object\Customer_Id;
+class Cart_Rule_Repository
 {
     /**
      * @var Connection
      */
     private $connection;
-
     /**
      * CartRuleRepository constructor.
      */
@@ -39,23 +36,16 @@ class CartRuleRepository
     {
         $this->connection = $connection;
     }
-
     /**
      * Delete cart rules by customer id
      *
      *
      */
-    public function deleteCartRulesByCustomerId(CustomerId $customerId): bool
+    public function delete_cart_rules_by_customer_id(Customer_Id $customer_id): bool
     {
-        $qb = $this->connection->createQueryBuilder();
-        $qb
-            ->delete(_DB_PREFIX_ . 'cart_rule')
-            ->where('id_customer = :customerId')
-            ->setParameter('customerId', $customerId->getValue())
-        ;
-
+        $qb = $this->connection->create_query_builder();
+        $qb->delete(_DB_PREFIX_ . 'cart_rule')->where('id_customer = :customerId')->set_parameter('customerId', $customer_id->get_value());
         $qb->execute();
-
         return true;
     }
 }

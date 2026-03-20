@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare (strict_types=1);
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -19,11 +19,10 @@ declare(strict_types=1);
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License version 3.0
  */
-
-namespace PrestaShop\Module\Psgdpr\Service;
+namespace Presta_Shop\Module\Psgdpr\Service;
 
 use Cart;
-use CartRule;
+use Cart_Rule;
 use Context;
 use Currency;
 use Customer;
@@ -36,506 +35,251 @@ use Hook;
 use Language;
 use Module;
 use Order;
-use PrestaShop\Module\Psgdpr\Service\Export\ExportInterface;
-use PrestaShop\PrestaShop\Adapter\Entity\CustomerThread;
-use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\CustomerId;
-use PrestaShopBundle\Translation\TranslatorInterface;
-use PrestaShopException;
+use Presta_Shop\Module\Psgdpr\Service\Export\Export_Interface;
+use Presta_Shop\Presta_Shop\Adapter\Entity\Customer_Thread;
+use Presta_Shop\Presta_Shop\Core\Domain\Customer\Value_Object\Customer_Id;
+use Presta_Shop_Bundle\Translation\Translator_Interface;
+use Presta_Shop_Exception;
 use Tools;
-
-class ExportService
+class Export_Service
 {
     /**
      * @var Context
      */
     private $context;
-
     /**
      * @var TranslatorInterface
      */
     private $translator;
-
     /**
      * ExportService constructor.
      *
      *
      */
-    public function __construct(Context $context, TranslatorInterface $translator)
+    public function __construct(Context $context, Translator_Interface $translator)
     {
         $this->context = $context;
         $this->translator = $translator;
     }
-
     /**
      * Transform customer data for export
      *
      *
      */
-    public function exportCustomerData(CustomerId $customerId, ExportInterface $exportStrategy): string
+    public function export_customer_data(Customer_Id $customer_id, Export_Interface $export_strategy): string
     {
-        $customer = new Customer($customerId->getValue());
-
-        $exportData = $this->getPrestashopInformations($customer);
-        $exportData['modules'] = $this->getThirdPartyModulesInformations($customer);
-
-        return $exportStrategy->getData($exportData);
+        $customer = new Customer($customer_id->get_value());
+        $export_data = $this->get_prestashop_informations($customer);
+        $export_data['modules'] = $this->get_third_party_modules_informations($customer);
+        return $export_strategy->get_data($export_data);
     }
-
-    public function getPrestashopInformations(Customer $customer): array
+    public function get_prestashop_informations(Customer $customer): array
     {
-        return [
-            'personalinformations' => $this->getPersonalInformations($customer),
-            'addresses' => $this->getAddressesInformations($customer),
-            'orders' => $this->getOrdersInformations($customer),
-            'productsOrdered' => $this->getProductsOrderedInformations($customer),
-            'carts' => $this->getCartsInformations($customer),
-            'productsInCart' => $this->getProductsInCartInformation($customer),
-            'messages' => $this->getMessagesInformations($customer),
-            'lastConnections' => $this->getLastConnectionsInformations($customer),
-            'discounts' => $this->getDiscountsInformations($customer),
-            'lastSentEmails' => $this->getLastSentEmailsInformations($customer),
-            'groups' => $this->getGroupsInformations($customer),
-        ];
+        return ['personalinformations' => $this->get_personal_informations($customer), 'addresses' => $this->get_addresses_informations($customer), 'orders' => $this->get_orders_informations($customer), 'productsOrdered' => $this->get_products_ordered_informations($customer), 'carts' => $this->get_carts_informations($customer), 'productsInCart' => $this->get_products_in_cart_information($customer), 'messages' => $this->get_messages_informations($customer), 'lastConnections' => $this->get_last_connections_informations($customer), 'discounts' => $this->get_discounts_informations($customer), 'lastSentEmails' => $this->get_last_sent_emails_informations($customer), 'groups' => $this->get_groups_informations($customer)];
     }
-
     /**
      * @param mixed $customer
      *
      *
      * @throws PrestaShopException
      */
-    public function getThirdPartyModulesInformations($customer): array
+    public function get_third_party_modules_informations($customer): array
     {
-        $thirdPartyModulesList = Hook::getHookModuleExecList('actionExportGDPRData');
-        $thirdPartyModuleData = [];
-
-        foreach ($thirdPartyModulesList as $module) {
-            $moduleInfos = Module::getInstanceById($module['id_module']);
-            $entryName = "MODULE : {$moduleInfos->displayName}";
-
+        $third_party_modules_list = Hook::get_hook_module_exec_list('actionExportGDPRData');
+        $third_party_module_data = [];
+        foreach ($third_party_modules_list as $module) {
+            $module_infos = Module::get_instance_by_id($module['id_module']);
+            $entry_name = "MODULE : {$module_infos->display_name}";
             try {
-                $dataFromModule = Hook::exec('actionExportGDPRData', (array) $customer, $module['id_module']);
+                $data_from_module = Hook::exec('actionExportGDPRData', (array) $customer, $module['id_module']);
             } catch (Exception|Error $e) {
-                $errorMessage = $this->translator->trans('An error occurred while retrieving data, please contact the module author.', [], 'Modules.Psgdpr.Admin');
-
-                $thirdPartyModuleData[$moduleInfos->name]['name'] = $entryName;
-                $thirdPartyModuleData[$moduleInfos->name]['headers'][] = $this->translator->trans('Error', [], 'Modules.Psgdpr.Admin');
-                $thirdPartyModuleData[$moduleInfos->name]['data'][] = [$errorMessage];
+                $error_message = $this->translator->trans('An error occurred while retrieving data, please contact the module author.', [], 'Modules.Psgdpr.Admin');
+                $third_party_module_data[$module_infos->name]['name'] = $entry_name;
+                $third_party_module_data[$module_infos->name]['headers'][] = $this->translator->trans('Error', [], 'Modules.Psgdpr.Admin');
+                $third_party_module_data[$module_infos->name]['data'][] = [$error_message];
                 continue;
             }
-
             /** @var array $moduleData */
-            $moduleData = json_decode($dataFromModule);
-
-            if (empty($moduleData)) {
-                $moduleData = $this->translator->trans('No data available', [], 'Modules.Psgdpr.Admin');
+            $module_data = json_decode($data_from_module);
+            if (empty($module_data)) {
+                $module_data = $this->translator->trans('No data available', [], 'Modules.Psgdpr.Admin');
             }
-
-            if (!is_array($moduleData)) {
-                $thirdPartyModuleData[$moduleInfos->name]['name'] = $entryName;
-                $thirdPartyModuleData[$moduleInfos->name]['headers'][] = $this->translator->trans('Information', [], 'Modules.Psgdpr.Admin');
-                $thirdPartyModuleData[$moduleInfos->name]['data'][] = [$moduleData];
+            if (!is_array($module_data)) {
+                $third_party_module_data[$module_infos->name]['name'] = $entry_name;
+                $third_party_module_data[$module_infos->name]['headers'][] = $this->translator->trans('Information', [], 'Modules.Psgdpr.Admin');
+                $third_party_module_data[$module_infos->name]['data'][] = [$module_data];
                 continue;
             }
-
-            foreach ($moduleData as $data) {
-                $dataToArray = json_decode(json_encode($data), true);
-
-                $thirdPartyModuleData[$moduleInfos->name]['name'] = $entryName;
-                $thirdPartyModuleData[$moduleInfos->name]['headers'] = array_keys($dataToArray);
-                $thirdPartyModuleData[$moduleInfos->name]['data'][] = array_values($dataToArray);
+            foreach ($module_data as $data) {
+                $data_to_array = json_decode(json_encode($data), true);
+                $third_party_module_data[$module_infos->name]['name'] = $entry_name;
+                $third_party_module_data[$module_infos->name]['headers'] = array_keys($data_to_array);
+                $third_party_module_data[$module_infos->name]['data'][] = array_values($data_to_array);
             }
         }
-
-        return $thirdPartyModuleData;
+        return $third_party_module_data;
     }
-
     /**
      * Get customer personal informations
      *
      *
      */
-    private function getPersonalInformations(Customer $customer): array
+    private function get_personal_informations(Customer $customer): array
     {
-        $customerGender = new Gender($customer->id_gender, $this->context->language->id);
-        $customerLanguage = Language::getLanguage($customer->id_lang);
-        $customerStats = $customer->getStats();
-
-        $genderName = $customerGender->name;
-
+        $customer_gender = new Gender($customer->id_gender, $this->context->language->id);
+        $customer_language = Language::get_language($customer->id_lang);
+        $customer_stats = $customer->get_stats();
+        $gender_name = $customer_gender->name;
         $today = new Datetime(date('m.d.y'));
         $age = $today->diff(new DateTime($customer->birthday));
-
-        return [
-            'name' => 'personal informations',
-            'headers' => [
-                $this->translator->trans('Id', [], 'Modules.Psgdpr.Admin'),
-                $this->translator->trans('Social title', [], 'Modules.Psgdpr.Admin'),
-                $this->translator->trans('First name', [], 'Modules.Psgdpr.Admin'),
-                $this->translator->trans('Last name', [], 'Modules.Psgdpr.Admin'),
-                $this->translator->trans('Birthday', [], 'Modules.Psgdpr.Admin'),
-                $this->translator->trans('Age', [], 'Modules.Psgdpr.Admin'),
-                $this->translator->trans('Email', [], 'Modules.Psgdpr.Admin'),
-                $this->translator->trans('Language', [], 'Modules.Psgdpr.Admin'),
-                $this->translator->trans('Registration date', [], 'Modules.Psgdpr.Admin'),
-                $this->translator->trans('Last visit date', [], 'Modules.Psgdpr.Admin'),
-                $this->translator->trans('Is guest', [], 'Modules.Psgdpr.Admin'),
-                $this->translator->trans('Company', [], 'Modules.Psgdpr.Admin'),
-                $this->translator->trans('Is newsletter subscribed', [], 'Modules.Psgdpr.Admin'),
-                $this->translator->trans('Is partner offers subscribed', [], 'Modules.Psgdpr.Admin'),
-                $this->translator->trans('Siret', [], 'Modules.Psgdpr.Admin'),
-                $this->translator->trans('Ape', [], 'Modules.Psgdpr.Admin'),
-                $this->translator->trans('Website', [], 'Modules.Psgdpr.Admin'),
-                $this->translator->trans('Personal note', [], 'Modules.Psgdpr.Admin'),
-            ],
-            'data' => [
-                [
-                    'id' => $customer->id,
-                    'gender' => $genderName,
-                    'firstname' => $customer->firstname,
-                    'lastname' => $customer->lastname,
-                    'birthday' => $customer->birthday,
-                    'age' => $age->y,
-                    'email' => $customer->email,
-                    'language' => $customerLanguage['name'],
-                    'dateAdd' => $customer->date_add,
-                    'lastVisit' => $customerStats['last_visit'],
-                    'isGuest' => json_encode($customer->is_guest),
-                    'company' => $customer->company,
-                    'isNewsletterSubscribed' => json_encode($customer->newsletter),
-                    'isPartnerOffersSubscribed' => json_encode($customer->optin),
-                    'siret' => $customer->siret,
-                    'ape' => $customer->ape,
-                    'website' => $customer->website,
-                    'note' => $customer->note,
-                ],
-            ],
-        ];
+        return ['name' => 'personal informations', 'headers' => [$this->translator->trans('Id', [], 'Modules.Psgdpr.Admin'), $this->translator->trans('Social title', [], 'Modules.Psgdpr.Admin'), $this->translator->trans('First name', [], 'Modules.Psgdpr.Admin'), $this->translator->trans('Last name', [], 'Modules.Psgdpr.Admin'), $this->translator->trans('Birthday', [], 'Modules.Psgdpr.Admin'), $this->translator->trans('Age', [], 'Modules.Psgdpr.Admin'), $this->translator->trans('Email', [], 'Modules.Psgdpr.Admin'), $this->translator->trans('Language', [], 'Modules.Psgdpr.Admin'), $this->translator->trans('Registration date', [], 'Modules.Psgdpr.Admin'), $this->translator->trans('Last visit date', [], 'Modules.Psgdpr.Admin'), $this->translator->trans('Is guest', [], 'Modules.Psgdpr.Admin'), $this->translator->trans('Company', [], 'Modules.Psgdpr.Admin'), $this->translator->trans('Is newsletter subscribed', [], 'Modules.Psgdpr.Admin'), $this->translator->trans('Is partner offers subscribed', [], 'Modules.Psgdpr.Admin'), $this->translator->trans('Siret', [], 'Modules.Psgdpr.Admin'), $this->translator->trans('Ape', [], 'Modules.Psgdpr.Admin'), $this->translator->trans('Website', [], 'Modules.Psgdpr.Admin'), $this->translator->trans('Personal note', [], 'Modules.Psgdpr.Admin')], 'data' => [['id' => $customer->id, 'gender' => $gender_name, 'firstname' => $customer->firstname, 'lastname' => $customer->lastname, 'birthday' => $customer->birthday, 'age' => $age->y, 'email' => $customer->email, 'language' => $customer_language['name'], 'dateAdd' => $customer->date_add, 'lastVisit' => $customer_stats['last_visit'], 'isGuest' => json_encode($customer->is_guest), 'company' => $customer->company, 'isNewsletterSubscribed' => json_encode($customer->newsletter), 'isPartnerOffersSubscribed' => json_encode($customer->optin), 'siret' => $customer->siret, 'ape' => $customer->ape, 'website' => $customer->website, 'note' => $customer->note]]];
     }
-
     /**
      * Get customer addresses informations
      *
      *
      */
-    private function getAddressesInformations(Customer $customer): array
+    private function get_addresses_informations(Customer $customer): array
     {
-        $customerAddresses = $customer->getAddresses($this->context->language->id);
-
-        return [
-            'name' => 'addresses',
-            'headers' => [
-                $this->translator->trans('Alias', [], 'Modules.Psgdpr.Admin'),
-                $this->translator->trans('Company', [], 'Modules.Psgdpr.Admin'),
-                $this->translator->trans('Full name', [], 'Modules.Psgdpr.Admin'),
-                $this->translator->trans('Full address', [], 'Modules.Psgdpr.Admin'),
-                $this->translator->trans('Phone', [], 'Modules.Psgdpr.Admin'),
-                $this->translator->trans('Phone mobile', [], 'Modules.Psgdpr.Admin'),
-                $this->translator->trans('Country name', [], 'Modules.Psgdpr.Admin'),
-                $this->translator->trans('Date add', [], 'Modules.Psgdpr.Admin'),
-            ],
-            'data' => array_map(function (array $address): array {
-                $fullName = "{$address['firstname']} {$address['lastname']}";
-                $fullAddress = "{$address['address1']} {$address['address2']} {$address['postcode']} {$address['city']}";
-
-                return [
-                    'alias' => $address['alias'],
-                    'company' => $address['company'],
-                    'fullName' => $fullName,
-                    'fullAddress' => $fullAddress,
-                    'country' => $address['country'],
-                    'phone' => $address['phone'],
-                    'mobilePhone' => $address['phone_mobile'],
-                    'dateAdd' => $address['date_add'],
-                ];
-            }, $customerAddresses),
-        ];
+        $customer_addresses = $customer->get_addresses($this->context->language->id);
+        return ['name' => 'addresses', 'headers' => [$this->translator->trans('Alias', [], 'Modules.Psgdpr.Admin'), $this->translator->trans('Company', [], 'Modules.Psgdpr.Admin'), $this->translator->trans('Full name', [], 'Modules.Psgdpr.Admin'), $this->translator->trans('Full address', [], 'Modules.Psgdpr.Admin'), $this->translator->trans('Phone', [], 'Modules.Psgdpr.Admin'), $this->translator->trans('Phone mobile', [], 'Modules.Psgdpr.Admin'), $this->translator->trans('Country name', [], 'Modules.Psgdpr.Admin'), $this->translator->trans('Date add', [], 'Modules.Psgdpr.Admin')], 'data' => array_map(function (array $address): array {
+            $full_name = "{$address['firstname']} {$address['lastname']}";
+            $full_address = "{$address['address1']} {$address['address2']} {$address['postcode']} {$address['city']}";
+            return ['alias' => $address['alias'], 'company' => $address['company'], 'fullName' => $full_name, 'fullAddress' => $full_address, 'country' => $address['country'], 'phone' => $address['phone'], 'mobilePhone' => $address['phone_mobile'], 'dateAdd' => $address['date_add']];
+        }, $customer_addresses)];
     }
-
     /**
      * Get customer orders informations
      *
      *
      */
-    private function getOrdersInformations(Customer $customer): array
+    private function get_orders_informations(Customer $customer): array
     {
-        $orderList = Order::getCustomerOrders($customer->id);
-
-        return [
-            'name' => 'orders',
-            'headers' => [
-                $this->translator->trans('Reference', [], 'Modules.Psgdpr.Admin'),
-                $this->translator->trans('Payment', [], 'Modules.Psgdpr.Admin'),
-                $this->translator->trans('status', [], 'Modules.Psgdpr.Admin'),
-                $this->translator->trans('Total paid with taxes', [], 'Modules.Psgdpr.Admin'),
-                $this->translator->trans('Date of order', [], 'Modules.Psgdpr.Admin'),
-            ],
-            'data' => array_map(function (array $order): array {
-                $currency = Currency::getCurrency($order['id_currency']);
-                $totalPaid = number_format($order['total_paid_tax_incl'], 2) . ' ' . $currency['iso_code'];
-
-                return [
-                    'reference' => $order['reference'],
-                    'payment' => $order['payment'],
-                    'state' => $order['order_state'],
-                    'totalPaid' => $totalPaid,
-                    'date' => $order['date_add'],
-                ];
-            }, $orderList),
-        ];
+        $order_list = Order::get_customer_orders($customer->id);
+        return ['name' => 'orders', 'headers' => [$this->translator->trans('Reference', [], 'Modules.Psgdpr.Admin'), $this->translator->trans('Payment', [], 'Modules.Psgdpr.Admin'), $this->translator->trans('status', [], 'Modules.Psgdpr.Admin'), $this->translator->trans('Total paid with taxes', [], 'Modules.Psgdpr.Admin'), $this->translator->trans('Date of order', [], 'Modules.Psgdpr.Admin')], 'data' => array_map(function (array $order): array {
+            $currency = Currency::get_currency($order['id_currency']);
+            $total_paid = number_format($order['total_paid_tax_incl'], 2) . ' ' . $currency['iso_code'];
+            return ['reference' => $order['reference'], 'payment' => $order['payment'], 'state' => $order['order_state'], 'totalPaid' => $total_paid, 'date' => $order['date_add']];
+        }, $order_list)];
     }
-
     /**
      * Get customer discounts informations
      *
      *
      */
-    private function getProductsOrderedInformations(Customer $customer): array
+    private function get_products_ordered_informations(Customer $customer): array
     {
-        $orderList = Order::getCustomerOrders($customer->id);
-        $productsOrdered = [];
-
-        foreach ($orderList as $order) {
-            $currentOrder = new Order($order['id_order']);
-            $productsInOrder = $currentOrder->getProducts();
-
-            $productsOrdered += array_map(function (array $product) use ($currentOrder): array {
-                return [
-                    'orderReference' => $currentOrder->reference,
-                    'reference' => $product['product_reference'],
-                    'name' => $product['product_name'],
-                    'quantity' => $product['product_quantity'],
-                ];
-            }, $productsInOrder);
+        $order_list = Order::get_customer_orders($customer->id);
+        $products_ordered = [];
+        foreach ($order_list as $order) {
+            $current_order = new Order($order['id_order']);
+            $products_in_order = $current_order->get_products();
+            $products_ordered += array_map(function (array $product) use ($current_order): array {
+                return ['orderReference' => $current_order->reference, 'reference' => $product['product_reference'], 'name' => $product['product_name'], 'quantity' => $product['product_quantity']];
+            }, $products_in_order);
         }
-
-        return [
-            'name' => 'products ordered',
-            'headers' => [
-                $this->translator->trans('Order reference', [], 'Modules.Psgdpr.Admin'),
-                $this->translator->trans('Reference', [], 'Modules.Psgdpr.Admin'),
-                $this->translator->trans('Name', [], 'Modules.Psgdpr.Admin'),
-                $this->translator->trans('Quantity', [], 'Modules.Psgdpr.Admin'),
-            ],
-            'data' => $productsOrdered,
-        ];
+        return ['name' => 'products ordered', 'headers' => [$this->translator->trans('Order reference', [], 'Modules.Psgdpr.Admin'), $this->translator->trans('Reference', [], 'Modules.Psgdpr.Admin'), $this->translator->trans('Name', [], 'Modules.Psgdpr.Admin'), $this->translator->trans('Quantity', [], 'Modules.Psgdpr.Admin')], 'data' => $products_ordered];
     }
-
     /**
      * Get customer carts informations
      *
      *
      */
-    private function getCartsInformations(Customer $customer): array
+    private function get_carts_informations(Customer $customer): array
     {
-        $cartList = Cart::getCustomerCarts($customer->id, false);
-
-        return [
-            'name' => 'carts',
-            'headers' => [
-                $this->translator->trans('Id', [], 'Modules.Psgdpr.Admin'),
-                $this->translator->trans('Total', [], 'Modules.Psgdpr.Admin'),
-                $this->translator->trans('Creation date', [], 'Modules.Psgdpr.Admin'),
-            ],
-            'data' => array_map(function (array $cart): array {
-                $currentCart = new Cart($cart['id_cart']);
-                $productsCart = $currentCart->getProducts();
-
-                return [
-                    'cartId' => $cart['id_cart'],
-                    'totalProducts' => count($productsCart),
-                    'creationDate' => $cart['date_add'],
-                ];
-            }, $cartList),
-        ];
+        $cart_list = Cart::get_customer_carts($customer->id, false);
+        return ['name' => 'carts', 'headers' => [$this->translator->trans('Id', [], 'Modules.Psgdpr.Admin'), $this->translator->trans('Total', [], 'Modules.Psgdpr.Admin'), $this->translator->trans('Creation date', [], 'Modules.Psgdpr.Admin')], 'data' => array_map(function (array $cart): array {
+            $current_cart = new Cart($cart['id_cart']);
+            $products_cart = $current_cart->get_products();
+            return ['cartId' => $cart['id_cart'], 'totalProducts' => count($products_cart), 'creationDate' => $cart['date_add']];
+        }, $cart_list)];
     }
-
     /**
      * Get customer products in cart informations
      *
      *
      */
-    private function getProductsInCartInformation(Customer $customer): array
+    private function get_products_in_cart_information(Customer $customer): array
     {
-        $cartList = Cart::getCustomerCarts($customer->id, false);
-        $productsInCart = [];
-
-        foreach ($cartList as $cart) {
-            $currentCart = new Cart($cart['id_cart']);
-            $productsList = $currentCart->getProducts();
-
-            $productsInCart += array_map(function (array $product) use ($currentCart): array {
-                return [
-                    'cartId' => $currentCart->id,
-                    'reference' => $product['reference'],
-                    'name' => $product['name'],
-                    'quantity' => $product['quantity'],
-                ];
-            }, $productsList);
+        $cart_list = Cart::get_customer_carts($customer->id, false);
+        $products_in_cart = [];
+        foreach ($cart_list as $cart) {
+            $current_cart = new Cart($cart['id_cart']);
+            $products_list = $current_cart->get_products();
+            $products_in_cart += array_map(function (array $product) use ($current_cart): array {
+                return ['cartId' => $current_cart->id, 'reference' => $product['reference'], 'name' => $product['name'], 'quantity' => $product['quantity']];
+            }, $products_list);
         }
-
-        return [
-            'name' => 'products in cart',
-            'headers' => [
-                $this->translator->trans('Cart id', [], 'Modules.Psgdpr.Admin'),
-                $this->translator->trans('Reference', [], 'Modules.Psgdpr.Admin'),
-                $this->translator->trans('Name', [], 'Modules.Psgdpr.Admin'),
-                $this->translator->trans('Quantity', [], 'Modules.Psgdpr.Admin'),
-            ],
-            'data' => $productsInCart,
-        ];
+        return ['name' => 'products in cart', 'headers' => [$this->translator->trans('Cart id', [], 'Modules.Psgdpr.Admin'), $this->translator->trans('Reference', [], 'Modules.Psgdpr.Admin'), $this->translator->trans('Name', [], 'Modules.Psgdpr.Admin'), $this->translator->trans('Quantity', [], 'Modules.Psgdpr.Admin')], 'data' => $products_in_cart];
     }
-
     /**
      * Get customer messages informations
      *
      *
      */
-    private function getMessagesInformations(Customer $customer): array
+    private function get_messages_informations(Customer $customer): array
     {
-        $customerMessages = CustomerThread::getCustomerMessages($customer->id);
-
-        return [
-            'name' => 'messages',
-            'headers' => [
-                $this->translator->trans('Ip address', [], 'Modules.Psgdpr.Admin'),
-                $this->translator->trans('Message', [], 'Modules.Psgdpr.Admin'),
-                $this->translator->trans('Creation date', [], 'Modules.Psgdpr.Admin'),
-            ],
-            'data' => array_map(function (array $message): array {
-                $ipAddress = $message['ip_address'];
-
-                if ((int) $message['ip_address'] == $message['ip_address']) {
-                    $ipAddress = long2ip((int) $message['ip_address']);
-                }
-
-                return [
-                    'ipAddress' => $ipAddress,
-                    'message' => $message['message'],
-                    'creationDate' => $message['date_add'],
-                ];
-            }, $customerMessages),
-        ];
+        $customer_messages = Customer_Thread::get_customer_messages($customer->id);
+        return ['name' => 'messages', 'headers' => [$this->translator->trans('Ip address', [], 'Modules.Psgdpr.Admin'), $this->translator->trans('Message', [], 'Modules.Psgdpr.Admin'), $this->translator->trans('Creation date', [], 'Modules.Psgdpr.Admin')], 'data' => array_map(function (array $message): array {
+            $ip_address = $message['ip_address'];
+            if ((int) $message['ip_address'] == $message['ip_address']) {
+                $ip_address = long2ip((int) $message['ip_address']);
+            }
+            return ['ipAddress' => $ip_address, 'message' => $message['message'], 'creationDate' => $message['date_add']];
+        }, $customer_messages)];
     }
-
     /**
      * Get customer last connections informations
      *
      *
      */
-    private function getLastConnectionsInformations(Customer $customer): array
+    private function get_last_connections_informations(Customer $customer): array
     {
-        $lastConnections = $customer->getLastConnections();
-
-        return [
-            'name' => 'last connections',
-            'headers' => [
-                $this->translator->trans('id', [], 'Modules.Psgdpr.Admin'),
-                $this->translator->trans('Http referer', [], 'Modules.Psgdpr.Admin'),
-                $this->translator->trans('Pages viewed', [], 'Modules.Psgdpr.Admin'),
-                $this->translator->trans('Total time', [], 'Modules.Psgdpr.Admin'),
-                $this->translator->trans('Ip address', [], 'Modules.Psgdpr.Admin'),
-                $this->translator->trans('Date', [], 'Modules.Psgdpr.Admin'),
-            ],
-            'data' => array_map(function (array $connection): array {
-                $ipAddress = $connection['ipaddress'];
-
-                if ((int) $connection['ipaddress'] == $connection['ipaddress']) {
-                    $ipAddress = long2ip((int) $connection['ipaddress']);
-                }
-
-                return [
-                    'connectionId' => $connection['id_connections'],
-                    'httpReferer' => $connection['http_referer'],
-                    'pagesViewed' => $connection['pages'],
-                    'totalTime' => $connection['time'],
-                    'ipAddress' => $ipAddress,
-                    'date' => $connection['date_add'],
-                ];
-            }, $lastConnections),
-        ];
+        $last_connections = $customer->get_last_connections();
+        return ['name' => 'last connections', 'headers' => [$this->translator->trans('id', [], 'Modules.Psgdpr.Admin'), $this->translator->trans('Http referer', [], 'Modules.Psgdpr.Admin'), $this->translator->trans('Pages viewed', [], 'Modules.Psgdpr.Admin'), $this->translator->trans('Total time', [], 'Modules.Psgdpr.Admin'), $this->translator->trans('Ip address', [], 'Modules.Psgdpr.Admin'), $this->translator->trans('Date', [], 'Modules.Psgdpr.Admin')], 'data' => array_map(function (array $connection): array {
+            $ip_address = $connection['ipaddress'];
+            if ((int) $connection['ipaddress'] == $connection['ipaddress']) {
+                $ip_address = long2ip((int) $connection['ipaddress']);
+            }
+            return ['connectionId' => $connection['id_connections'], 'httpReferer' => $connection['http_referer'], 'pagesViewed' => $connection['pages'], 'totalTime' => $connection['time'], 'ipAddress' => $ip_address, 'date' => $connection['date_add']];
+        }, $last_connections)];
     }
-
     /**
      * Get customer discounts informations
      *
      *
      */
-    private function getDiscountsInformations(Customer $customer): array
+    private function get_discounts_informations(Customer $customer): array
     {
-        $discountsList = CartRule::getAllCustomerCartRules($customer->id);
-
-        return [
-            'name' => 'discounts',
-            'headers' => [
-                $this->translator->trans('Id', [], 'Modules.Psgdpr.Admin'),
-                $this->translator->trans('Code', [], 'Modules.Psgdpr.Admin'),
-                $this->translator->trans('Name', [], 'Modules.Psgdpr.Admin'),
-                $this->translator->trans('Description', [], 'Modules.Psgdpr.Admin'),
-            ],
-            'data' => array_map(function (array $discount): array {
-                return [
-                    'discountId' => $discount['id_cart_rule'],
-                    'code' => $discount['code'],
-                    'name' => $discount['name'],
-                    'description' => $discount['description'],
-                ];
-            }, $discountsList),
-        ];
+        $discounts_list = Cart_Rule::get_all_customer_cart_rules($customer->id);
+        return ['name' => 'discounts', 'headers' => [$this->translator->trans('Id', [], 'Modules.Psgdpr.Admin'), $this->translator->trans('Code', [], 'Modules.Psgdpr.Admin'), $this->translator->trans('Name', [], 'Modules.Psgdpr.Admin'), $this->translator->trans('Description', [], 'Modules.Psgdpr.Admin')], 'data' => array_map(function (array $discount): array {
+            return ['discountId' => $discount['id_cart_rule'], 'code' => $discount['code'], 'name' => $discount['name'], 'description' => $discount['description']];
+        }, $discounts_list)];
     }
-
     /**
      * Get customer sent emails informations
      *
      *
      */
-    private function getLastSentEmailsInformations(Customer $customer): array
+    private function get_last_sent_emails_informations(Customer $customer): array
     {
-        $emails = $customer->getLastEmails();
-
-        return [
-            'name' => 'last sent emails',
-            'headers' => [
-                $this->translator->trans('Date', [], 'Modules.Psgdpr.Admin'),
-                $this->translator->trans('Language', [], 'Modules.Psgdpr.Admin'),
-                $this->translator->trans('Subject', [], 'Modules.Psgdpr.Admin'),
-                $this->translator->trans('Template', [], 'Modules.Psgdpr.Admin'),
-            ],
-            'data' => array_map(function (array $email): array {
-                return [
-                    'creationDate' => Tools::displayDate($email['date_add'], true),
-                    'language' => $email['language'],
-                    'subject' => $email['subject'],
-                    'template' => $email['template'],
-                ];
-            }, $emails),
-        ];
+        $emails = $customer->get_last_emails();
+        return ['name' => 'last sent emails', 'headers' => [$this->translator->trans('Date', [], 'Modules.Psgdpr.Admin'), $this->translator->trans('Language', [], 'Modules.Psgdpr.Admin'), $this->translator->trans('Subject', [], 'Modules.Psgdpr.Admin'), $this->translator->trans('Template', [], 'Modules.Psgdpr.Admin')], 'data' => array_map(function (array $email): array {
+            return ['creationDate' => Tools::display_date($email['date_add'], true), 'language' => $email['language'], 'subject' => $email['subject'], 'template' => $email['template']];
+        }, $emails)];
     }
-
     /**
      * Get customer groups informations
      *
      *
      */
-    private function getGroupsInformations(Customer $customer): array
+    private function get_groups_informations(Customer $customer): array
     {
-        $groupsidList = $customer->getGroups();
-
-        return [
-            'name' => 'groups',
-            'headers' => [
-                $this->translator->trans('Id', [], 'Modules.Psgdpr.Admin'),
-                $this->translator->trans('Name', [], 'Modules.Psgdpr.Admin'),
-            ],
-            'data' => array_map(function ($groupId): array {
-                $currentGroup = new Group($groupId);
-                $languageId = $this->context->language->id;
-
-                return [
-                    'groupId' => $currentGroup->id,
-                    'name' => $currentGroup->name[$languageId],
-                ];
-            }, $groupsidList),
-        ];
+        $groupsid_list = $customer->get_groups();
+        return ['name' => 'groups', 'headers' => [$this->translator->trans('Id', [], 'Modules.Psgdpr.Admin'), $this->translator->trans('Name', [], 'Modules.Psgdpr.Admin')], 'data' => array_map(function ($group_id): array {
+            $current_group = new Group($group_id);
+            $language_id = $this->context->language->id;
+            return ['groupId' => $current_group->id, 'name' => $current_group->name[$language_id]];
+        }, $groupsid_list)];
     }
 }

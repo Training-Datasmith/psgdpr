@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare (strict_types=1);
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -19,27 +19,23 @@ declare(strict_types=1);
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License version 3.0
  */
-
-namespace PrestaShop\Module\Psgdpr\Service\Export;
+namespace Presta_Shop\Module\Psgdpr\Service\Export;
 
 use Context;
-use PrestaShop\Module\Psgdpr\Service\LoggerService;
-
-abstract class ExportContext
+use Presta_Shop\Module\Psgdpr\Service\Logger_Service;
+abstract class Export_Context
 {
     /**
      * @var Context
      */
     protected $context;
-
     /**
      * @var LoggerService
      */
-    protected $loggerService;
-
-    public function __construct(Context $context, LoggerService $loggerService)
+    protected $logger_service;
+    public function __construct(Context $context, Logger_Service $logger_service)
     {
         $this->context = $context;
-        $this->loggerService = $loggerService;
+        $this->logger_service = $logger_service;
     }
 }

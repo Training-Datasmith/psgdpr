@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare (strict_types=1);
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -19,31 +19,26 @@ declare(strict_types=1);
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License version 3.0
  */
+namespace Presta_Shop\Module\Psgdpr\Service\Back_Responder;
 
-namespace PrestaShop\Module\Psgdpr\Service\BackResponder;
-
-use PrestaShop\Module\Psgdpr\Exception\Customer\ExportException;
-
-class BackResponderFactory
+use Presta_Shop\Module\Psgdpr\Exception\Customer\Export_Exception;
+class Back_Responder_Factory
 {
     /**
      * @var iterable
      */
     private $strategies;
-
-    public function __construct(iterable $ExportStategies)
+    public function __construct(iterable $export_stategies)
     {
-        $this->strategies = $ExportStategies;
+        $this->strategies = $export_stategies;
     }
-
-    public function getStrategyByType(string $type): BackResponderInterface
+    public function get_strategy_by_type(string $type): Back_Responder_Interface
     {
         foreach ($this->strategies as $strategy) {
             if ($strategy->supports($type)) {
                 return $strategy;
             }
         }
-
-        throw new ExportException('No strategy found for type: ' . $type);
+        throw new Export_Exception('No strategy found for type: ' . $type);
     }
 }

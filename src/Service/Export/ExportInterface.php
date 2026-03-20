@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare (strict_types=1);
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -19,12 +19,10 @@ declare(strict_types=1);
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License version 3.0
  */
+namespace Presta_Shop\Module\Psgdpr\Service\Export;
 
-namespace PrestaShop\Module\Psgdpr\Service\Export;
-
-interface ExportInterface
+interface Export_Interface
 {
-    public function getData(array $customerData): string;
-
+    public function get_data(array $customer_data): string;
     public function supports(string $type): bool;
 }

@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare (strict_types=1);
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -19,21 +19,19 @@ declare(strict_types=1);
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License version 3.0
  */
-
-namespace PrestaShop\Module\Psgdpr\Entity;
+namespace Presta_Shop\Module\Psgdpr\Entity;
 
 use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 use InvalidArgumentException;
-use PrestaShop\Module\Psgdpr\Exception\Logger\RequestTypeValidityException;
-use PrestaShop\Module\Psgdpr\Service\LoggerService;
-
+use Presta_Shop\Module\Psgdpr\Exception\Logger\Request_Type_Validity_Exception;
+use Presta_Shop\Module\Psgdpr\Service\Logger_Service;
 /**
  * @ORM\Table()
  * @ORM\Entity(repositoryClass="PrestaShop\Module\Psgdpr\Repository\LoggerRepository")
  * @ORM\HasLifecycleCallbacks()
  */
-class PsgdprLog
+class Psgdpr_Log
 {
     /**
      * @var int
@@ -43,186 +41,152 @@ class PsgdprLog
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $id;
-
     /**
      * @var int
      *
      * @ORM\Column(name="id_customer", type="integer", length=10, nullable=false)
      */
-    private $customerId;
-
+    private $customer_id;
     /**
      * @var int
      *
      * @ORM\Column(name="id_guest", type="integer", length=10, nullable=false)
      */
-    private $guestId;
-
+    private $guest_id;
     /**
      * @var string
      *
      * @ORM\Column(name="client_name", type="string", length=255, nullable=false)
      */
-    private $clientData;
-
+    private $client_data;
     /**
      * @var int
      *
      * @ORM\Column(name="id_module", type="integer", nullable=false)
      */
-    private $moduleId;
-
+    private $module_id;
     /**
      * @var int
      *
      * @ORM\Column(name="request_type", type="integer", nullable=false)
      */
-    private $requestType;
-
+    private $request_type;
     /**
      * @var \DateTime
      *
      * @ORM\Column(name="date_add", type="datetime", nullable=false)
      */
-    private $createdAt;
-
+    private $created_at;
     /**
      * @var \DateTime
      *
      * @ORM\Column(name="date_upd", type="datetime", nullable=false)
      */
-    private $updatedAt;
-
-    public function getId(): int
+    private $updated_at;
+    public function get_id(): int
     {
         return $this->id;
     }
-
-    public function getCustomerId(): int
+    public function get_customer_id(): int
     {
-        return $this->customerId;
+        return $this->customer_id;
     }
-
     /**
      * @return $this
      */
-    public function setCustomerId(int $customerId): self
+    public function set_customer_id(int $customer_id): self
     {
-        $this->customerId = $customerId;
-
+        $this->customer_id = $customer_id;
         return $this;
     }
-
-    public function getGuestId(): int
+    public function get_guest_id(): int
     {
-        return $this->guestId;
+        return $this->guest_id;
     }
-
     /**
      * @return $this
      */
-    public function setGuestId(int $guestId): self
+    public function set_guest_id(int $guest_id): self
     {
-        $this->guestId = $guestId;
-
+        $this->guest_id = $guest_id;
         return $this;
     }
-
-    public function getClientData(): string
+    public function get_client_data(): string
     {
-        return $this->clientData;
+        return $this->client_data;
     }
-
     /**
      * @return $this
      */
-    public function setClientData(string $clientData): self
+    public function set_client_data(string $client_data): self
     {
-        $this->clientData = $clientData;
-
+        $this->client_data = $client_data;
         return $this;
     }
-
-    public function getModuleId(): int
+    public function get_module_id(): int
     {
-        return $this->moduleId;
+        return $this->module_id;
     }
-
     /**
      * @return $this
      */
-    public function setModuleId(int $moduleId): self
+    public function set_module_id(int $module_id): self
     {
-        $this->moduleId = $moduleId;
-
+        $this->module_id = $module_id;
         return $this;
     }
-
     /**
      * @return $this
      */
-    public function setRequestType(int $requestType): self
+    public function set_request_type(int $request_type): self
     {
-        $this->assertRequestTypeIsValid($requestType);
-
-        $this->requestType = $requestType;
-
+        $this->assert_request_type_is_valid($request_type);
+        $this->request_type = $request_type;
         return $this;
     }
-
-    public function getRequestType(): int
+    public function get_request_type(): int
     {
-        return $this->requestType;
+        return $this->request_type;
     }
-
     /**
      * @return mixed
      */
-    public function getCreatedAt()
+    public function get_created_at()
     {
-        return $this->createdAt;
+        return $this->created_at;
     }
-
     /**
      * @return $this
      */
-    private function setCreatedAt(DateTime $createdAt): self
+    private function set_created_at(DateTime $created_at): self
     {
-        $this->createdAt = $createdAt;
-
+        $this->created_at = $created_at;
         return $this;
     }
-
-    public function getUpdatedAt(): DateTime
+    public function get_updated_at(): DateTime
     {
-        return $this->updatedAt;
+        return $this->updated_at;
     }
-
     /**
      * @return $this
      */
-    private function setUpdatedAt(DateTime $updatedAt): self
+    private function set_updated_at(DateTime $updated_at): self
     {
-        $this->updatedAt = $updatedAt;
-
+        $this->updated_at = $updated_at;
         return $this;
     }
-
     /**
      * @ORM\PrePersist
      * @ORM\PreUpdate
      */
-    public function updatedTimestamps(): void
+    public function updated_timestamps(): void
     {
-        $dateTimeNow = new DateTime('now');
-
-        if ($this->getCreatedAt() == null) {
-            $this->setCreatedAt($dateTimeNow);
+        $date_time_now = new DateTime('now');
+        if ($this->get_created_at() == null) {
+            $this->set_created_at($date_time_now);
         }
-
-        $this->setUpdatedAt($dateTimeNow);
+        $this->set_updated_at($date_time_now);
     }
-
     /**
      * Asserts that request type is valid
      *
@@ -230,17 +194,11 @@ class PsgdprLog
      *
      * @throws InvalidArgumentException
      */
-    private function assertRequestTypeIsValid(int $requestType): void
+    private function assert_request_type_is_valid(int $request_type): void
     {
-        $validTypes = [
-            LoggerService::REQUEST_TYPE_EXPORT_CSV,
-            LoggerService::REQUEST_TYPE_EXPORT_PDF,
-            LoggerService::REQUEST_TYPE_CONSENT_COLLECTING,
-            LoggerService::REQUEST_TYPE_DELETE,
-        ];
-
-        if (!in_array($requestType, $validTypes)) {
-            throw new RequestTypeValidityException(sprintf('Invalid request type %s', $requestType));
+        $valid_types = [Logger_Service::REQUEST_TYPE_EXPORT_CSV, Logger_Service::REQUEST_TYPE_EXPORT_PDF, Logger_Service::REQUEST_TYPE_CONSENT_COLLECTING, Logger_Service::REQUEST_TYPE_DELETE];
+        if (!in_array($request_type, $valid_types)) {
+            throw new Request_Type_Validity_Exception(sprintf('Invalid request type %s', $request_type));
         }
     }
 }

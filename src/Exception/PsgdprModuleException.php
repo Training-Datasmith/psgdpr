@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare (strict_types=1);
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -19,14 +19,12 @@ declare(strict_types=1);
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License version 3.0
  */
+namespace Presta_Shop\Module\Psgdpr\Exception;
 
-namespace PrestaShop\Module\Psgdpr\Exception;
-
-use PrestaShop\PrestaShop\Core\Exception\CoreException;
-
+use Presta_Shop\Presta_Shop\Core\Exception\Core_Exception;
 /**
  * Class PsgdprModuleException is base exception for psgdpr module.
  */
-class PsgdprModuleException extends CoreException
+class Psgdpr_Module_Exception extends Core_Exception
 {
 }

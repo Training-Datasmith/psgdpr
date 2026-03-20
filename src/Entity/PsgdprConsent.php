@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare (strict_types=1);
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -19,20 +19,18 @@ declare(strict_types=1);
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License version 3.0
  */
-
-namespace PrestaShop\Module\Psgdpr\Entity;
+namespace Presta_Shop\Module\Psgdpr\Entity;
 
 use DateTime;
-use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Array_Collection;
 use Doctrine\ORM\Mapping as ORM;
-use Doctrine\ORM\PersistentCollection;
-
+use Doctrine\ORM\Persistent_Collection;
 /**
  * @ORM\Table()
  * @ORM\Entity(repositoryClass="PrestaShop\Module\Psgdpr\Repository\ConsentRepository")
  * @ORM\HasLifecycleCallbacks()
  */
-class PsgdprConsent
+class Psgdpr_Consent
 {
     /**
      * @var int
@@ -41,221 +39,180 @@ class PsgdprConsent
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $id;
-
     /**
      * @var int
      *
      * @ORM\Column(name="id_module", type="integer", nullable=false)
      */
-    private $moduleId;
-
+    private $module_id;
     /**
      * @var bool
      *
      * @ORM\Column(name="active", type="boolean", nullable=false)
      */
     private $active = true;
-
     /**
      * @var bool
      *
      * @ORM\Column(name="error", type="boolean", nullable=false)
      */
     private $error = false;
-
     /**
      * @var string
      *
      * @ORM\Column(name="error_message", type="string", length=255, nullable=false)
      */
-    private $errorMessage = '';
-
+    private $error_message = '';
     /**
      * @var ArrayCollection
      * @ORM\OneToMany(targetEntity="PrestaShop\Module\Psgdpr\Entity\PsgdprConsentLang", cascade={"persist", "remove"}, mappedBy="consent")
      */
-    private $consentLangs;
-
+    private $consent_langs;
     /**
      * @var \DateTime
      *
      * @ORM\Column(name="date_add", type="datetime", nullable=false)
      */
-    private $createdAt;
-
+    private $created_at;
     /**
      * @var \DateTime
      *
      * @ORM\Column(name="date_upd", type="datetime", nullable=false)
      */
-    private $updatedAt;
-
+    private $updated_at;
     public function __construct()
     {
-        $this->consentLangs = new ArrayCollection();
+        $this->consent_langs = new Array_Collection();
     }
-
-    public function getId(): int
+    public function get_id(): int
     {
         return $this->id;
     }
-
     /**
      * @return $this
      */
-    public function setId(int $id): self
+    public function set_id(int $id): self
     {
         $this->id = $id;
-
         return $this;
     }
-
     /**
      * @return ArrayCollection|PersistentCollection
      */
-    public function getConsentLangs()
+    public function get_consent_langs()
     {
-        return $this->consentLangs;
+        return $this->consent_langs;
     }
-
     /**
      * @return $this
      */
-    public function setConsentLangs(ArrayCollection $consentLangs): self
+    public function set_consent_langs(Array_Collection $consent_langs): self
     {
-        $this->consentLangs = $consentLangs;
-
+        $this->consent_langs = $consent_langs;
         return $this;
     }
-
     /**
      * @return $this
      */
-    public function addConsentLang(PsgdprConsentLang $consentLang): self
+    public function add_consent_lang(Psgdpr_Consent_Lang $consent_lang): self
     {
-        $consentLang->setConsent($this);
-
-        $this->consentLangs->add($consentLang);
-
+        $consent_lang->set_consent($this);
+        $this->consent_langs->add($consent_lang);
         return $this;
     }
-
-    public function getModuleId(): int
+    public function get_module_id(): int
     {
-        return $this->moduleId;
+        return $this->module_id;
     }
-
     /**
      * @return $this
      */
-    public function setModuleId(int $moduleId): self
+    public function set_module_id(int $module_id): self
     {
-        $this->moduleId = $moduleId;
-
+        $this->module_id = $module_id;
         return $this;
     }
-
-    public function isActive(): bool
+    public function is_active(): bool
     {
         return $this->active;
     }
-
     /**
      * @return $this
      */
-    public function setActive(bool $active): self
+    public function set_active(bool $active): self
     {
         $this->active = $active;
-
         return $this;
     }
-
-    public function isError(): bool
+    public function is_error(): bool
     {
         return $this->error;
     }
-
     /**
      * @return $this
      */
-    public function setError(bool $error): self
+    public function set_error(bool $error): self
     {
         $this->error = $error;
-
         return $this;
     }
-
-    public function getErrorMessage(): string
+    public function get_error_message(): string
     {
-        return $this->errorMessage;
+        return $this->error_message;
     }
-
     /**
      * @return $this
      */
-    public function setErrorMessage(string $errorMessage): self
+    public function set_error_message(string $error_message): self
     {
-        $this->errorMessage = $errorMessage;
-
+        $this->error_message = $error_message;
         return $this;
     }
-
-    public function getConsentContent(): string
+    public function get_consent_content(): string
     {
-        if ($this->consentLangs->count() <= 0) {
+        if ($this->consent_langs->count() <= 0) {
             return '';
         }
-
-        $consentLang = $this->consentLangs->first();
-
-        return $consentLang->getContent();
+        $consent_lang = $this->consent_langs->first();
+        return $consent_lang->get_content();
     }
-
     /**
      * @return mixed
      */
-    public function getCreatedAt()
+    public function get_created_at()
     {
-        return $this->createdAt;
+        return $this->created_at;
     }
-
     /**
      * @return $this
      */
-    private function setCreatedAt(DateTime $createdAt): self
+    private function set_created_at(DateTime $created_at): self
     {
-        $this->createdAt = $createdAt;
-
+        $this->created_at = $created_at;
         return $this;
     }
-
-    public function getUpdatedAt(): DateTime
+    public function get_updated_at(): DateTime
     {
-        return $this->updatedAt;
+        return $this->updated_at;
     }
-
     /**
      * @return $this
      */
-    private function setUpdatedAt(DateTime $updatedAt): self
+    private function set_updated_at(DateTime $updated_at): self
     {
-        $this->updatedAt = $updatedAt;
-
+        $this->updated_at = $updated_at;
         return $this;
     }
-
     /**
      * @ORM\PrePersist
      * @ORM\PreUpdate
      */
-    public function updatedTimestamps(): void
+    public function updated_timestamps(): void
     {
-        $dateTimeNow = new DateTime('now');
-
-        if ($this->getCreatedAt() == null) {
-            $this->setCreatedAt($dateTimeNow);
+        $date_time_now = new DateTime('now');
+        if ($this->get_created_at() == null) {
+            $this->set_created_at($date_time_now);
         }
-
-        $this->setUpdatedAt($dateTimeNow);
+        $this->set_updated_at($date_time_now);
     }
 }

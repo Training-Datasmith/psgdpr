@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare (strict_types=1);
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -19,19 +19,16 @@ declare(strict_types=1);
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License version 3.0
  */
-
-namespace PrestaShop\Module\Psgdpr\Repository;
+namespace Presta_Shop\Module\Psgdpr\Repository;
 
 use Doctrine\DBAL\Connection;
-use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\CustomerId;
-
-class OrderInvoiceRepository
+use Presta_Shop\Presta_Shop\Core\Domain\Customer\Value_Object\Customer_Id;
+class Order_Invoice_Repository
 {
     /**
      * @var Connection
      */
     private $connection;
-
     /**
      * OrderRepository constructor.
      */
@@ -39,48 +36,31 @@ class OrderInvoiceRepository
     {
         $this->connection = $connection;
     }
-
     /**
      * Find customer cart products by customer id
      *
      *
      */
-    public function findIfInvoicesExistByCustomerId(CustomerId $customerId): bool
+    public function find_if_invoices_exist_by_customer_id(Customer_Id $customer_id): bool
     {
-        $qb = $this->connection->createQueryBuilder();
-
-        $query = $qb->select('count(*)')
-            ->from(_DB_PREFIX_ . 'order_invoice', 'oi')
-            ->leftJoin('oi', _DB_PREFIX_ . 'orders', 'o', 'oi.id_order = o.id_order')
-            ->where('o.id_customer = :customerId')
-            ->setParameter('customerId', $customerId->getValue());
-
+        $qb = $this->connection->create_query_builder();
+        $query = $qb->select('count(*)')->from(_DB_PREFIX_ . 'order_invoice', 'oi')->left_join('oi', _DB_PREFIX_ . 'orders', 'o', 'oi.id_order = o.id_order')->where('o.id_customer = :customerId')->set_parameter('customerId', $customer_id->get_value());
         $result = $query->execute();
-
-        if ($result->fetchOne() == 0) {
+        if ($result->fetch_one() == 0) {
             return false;
         }
-
         return true;
     }
-
     /**
      * Find customer cart products by customer id
      *
      *
      */
-    public function findAllInvoicesByCustomerId(CustomerId $customerId): array
+    public function find_all_invoices_by_customer_id(Customer_Id $customer_id): array
     {
-        $qb = $this->connection->createQueryBuilder();
-
-        $query = $qb->select('oi.*')
-            ->from(_DB_PREFIX_ . 'order_invoice', 'oi')
-            ->leftJoin('oi', _DB_PREFIX_ . 'orders', 'o', 'oi.id_order = o.id_order')
-            ->where('o.id_customer = :customerId')
-            ->setParameter('customerId', $customerId->getValue());
-
+        $qb = $this->connection->create_query_builder();
+        $query = $qb->select('oi.*')->from(_DB_PREFIX_ . 'order_invoice', 'oi')->left_join('oi', _DB_PREFIX_ . 'orders', 'o', 'oi.id_order = o.id_order')->where('o.id_customer = :customerId')->set_parameter('customerId', $customer_id->get_value());
         $result = $query->execute();
-
-        return $result->fetchAllAssociative();
+        return $result->fetch_all_associative();
     }
 }

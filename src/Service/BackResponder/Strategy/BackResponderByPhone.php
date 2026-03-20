@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare (strict_types=1);
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -19,19 +19,16 @@ declare(strict_types=1);
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License version 3.0
  */
+namespace Presta_Shop\Module\Psgdpr\Service\Back_Responder\Strategy;
 
-namespace PrestaShop\Module\Psgdpr\Service\BackResponder\Strategy;
-
-use PrestaShop\Module\Psgdpr\Service\BackResponder\BackResponderContext;
-use PrestaShop\Module\Psgdpr\Service\BackResponder\BackResponderInterface;
-use PrestaShop\Module\Psgdpr\Service\LoggerService;
-use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Response;
-
-class BackResponderByPhone extends BackResponderContext implements BackResponderInterface
+use Presta_Shop\Module\Psgdpr\Service\Back_Responder\Back_Responder_Context;
+use Presta_Shop\Module\Psgdpr\Service\Back_Responder\Back_Responder_Interface;
+use Presta_Shop\Module\Psgdpr\Service\Logger_Service;
+use Symfony\Component\Http_Foundation\Json_Response;
+use Symfony\Component\Http_Foundation\Response;
+class Back_Responder_By_Phone extends Back_Responder_Context implements Back_Responder_Interface
 {
     public const TYPE = 'phone';
-
     /**
      * export customer data
      *
@@ -39,11 +36,9 @@ class BackResponderByPhone extends BackResponderContext implements BackResponder
      */
     public function export(string $data): Response
     {
-        $result = $this->exportService->getThirdPartyModulesInformations(['phone' => $data]);
-
-        return new JsonResponse($result);
+        $result = $this->export_service->get_third_party_modules_informations(['phone' => $data]);
+        return new Json_Response($result);
     }
-
     /**
      * delete customer data
      *
@@ -51,13 +46,10 @@ class BackResponderByPhone extends BackResponderContext implements BackResponder
      */
     public function delete(string $data): Response
     {
-        $this->customerService->deleteCustomerDataFromModules(['phone' => $data]);
-
-        $this->loggerService->createLog(0, LoggerService::REQUEST_TYPE_DELETE, 0, 0, $data);
-
-        return new JsonResponse(['message' => 'delete completed']);
+        $this->customer_service->delete_customer_data_from_modules(['phone' => $data]);
+        $this->logger_service->create_log(0, Logger_Service::REQUEST_TYPE_DELETE, 0, 0, $data);
+        return new Json_Response(['message' => 'delete completed']);
     }
-
     public function supports(string $type): bool
     {
         return $type === self::TYPE;

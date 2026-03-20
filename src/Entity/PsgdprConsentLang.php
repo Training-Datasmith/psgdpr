@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare (strict_types=1);
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -19,17 +19,15 @@ declare(strict_types=1);
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License version 3.0
  */
-
-namespace PrestaShop\Module\Psgdpr\Entity;
+namespace Presta_Shop\Module\Psgdpr\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use PrestaShopBundle\Entity\Lang;
-
+use Presta_Shop_Bundle\Entity\Lang;
 /**
  * @ORM\Table()
  * @ORM\Entity()
  */
-class PsgdprConsentLang
+class Psgdpr_Consent_Lang
 {
     /**
      * @var PsgdprConsent
@@ -38,7 +36,6 @@ class PsgdprConsentLang
      * @ORM\JoinColumn(name="id_gdpr_consent", referencedColumnName="id_gdpr_consent", nullable=false)
      */
     private $consent;
-
     /**
      * @var Lang
      * @ORM\Id
@@ -46,77 +43,63 @@ class PsgdprConsentLang
      * @ORM\JoinColumn(name="id_lang", referencedColumnName="id_lang", nullable=false, onDelete="CASCADE")
      */
     private $lang;
-
     /**
      * @var string
      *
      * @ORM\Column(name="message", type="string", length=255, nullable=false)
      */
     private $message;
-
     /**
      * @var int
      * @ORM\Column(name="id_shop", type="integer", length=10, nullable=false)
      */
-    private $shopId;
-
-    public function getConsent(): PsgdprConsent
+    private $shop_id;
+    public function get_consent(): Psgdpr_Consent
     {
         return $this->consent;
     }
-
     /**
      * @return $this
      */
-    public function setConsent(PsgdprConsent $consent): self
+    public function set_consent(Psgdpr_Consent $consent): self
     {
         $this->consent = $consent;
-
         return $this;
     }
-
-    public function getLang(): Lang
+    public function get_lang(): Lang
     {
         return $this->lang;
     }
-
     /**
      * @return $this
      */
-    public function setLang(Lang $lang): self
+    public function set_lang(Lang $lang): self
     {
         $this->lang = $lang;
-
         return $this;
     }
-
-    public function getMessage(): string
+    public function get_message(): string
     {
         return $this->message;
     }
-
     /**
      * @return $this
      */
-    public function setMessage(string $message): self
+    public function set_message(string $message): self
     {
         $this->message = $message;
-
         return $this;
     }
-
-    public function getShopId(): int
+    public function get_shop_id(): int
     {
-        return $this->shopId;
+        return $this->shop_id;
     }
-
     /**
      * @return $this
      */
-    public function setShopId(int $shopId): self
+    public function set_shop_id(int $shop_id): self
     {
-        $this->shopId = $shopId;
-
+        $this->shop_id = $shop_id;
         return $this;
     }
 }

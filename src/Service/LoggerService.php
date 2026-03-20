@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare (strict_types=1);
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -19,31 +19,26 @@ declare(strict_types=1);
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License version 3.0
  */
-
-namespace PrestaShop\Module\Psgdpr\Service;
+namespace Presta_Shop\Module\Psgdpr\Service;
 
 use Exception;
-use PrestaShop\Module\Psgdpr\Entity\PsgdprLog;
-use PrestaShop\Module\Psgdpr\Exception\Logger\AddLogException;
-use PrestaShop\Module\Psgdpr\Repository\LoggerRepository;
-
-class LoggerService
+use Presta_Shop\Module\Psgdpr\Entity\Psgdpr_Log;
+use Presta_Shop\Module\Psgdpr\Exception\Logger\Add_Log_Exception;
+use Presta_Shop\Module\Psgdpr\Repository\Logger_Repository;
+class Logger_Service
 {
     public const REQUEST_TYPE_CONSENT_COLLECTING = 1;
     public const REQUEST_TYPE_EXPORT_PDF = 2;
     public const REQUEST_TYPE_EXPORT_CSV = 3;
     public const REQUEST_TYPE_DELETE = 4;
-
     /**
      * @var LoggerRepository
      */
-    private $LoggerRepository;
-
-    public function __construct(LoggerRepository $LoggerRepository)
+    private $logger_repository;
+    public function __construct(Logger_Repository $logger_repository)
     {
-        $this->LoggerRepository = $LoggerRepository;
+        $this->logger_repository = $logger_repository;
     }
-
     /**
      * Create log
      *
@@ -51,26 +46,25 @@ class LoggerService
      * @throws Exception
      *
      */
-    public function createLog(int $customerId, int $requestType, int $moduleId, int $guestId = 0, string $clientData = ''): void
+    public function create_log(int $customer_id, int $request_type, int $module_id, int $guest_id = 0, string $client_data = ''): void
     {
         try {
-            $log = new PsgdprLog();
-            $log->setCustomerId($customerId);
-            $log->setRequestType($requestType);
-            $log->setModuleId($moduleId);
-            $log->setGuestId($guestId);
-            $log->setClientData($clientData);
-            $this->LoggerRepository->add($log);
+            $log = new Psgdpr_Log();
+            $log->set_customer_id($customer_id);
+            $log->set_request_type($request_type);
+            $log->set_module_id($module_id);
+            $log->set_guest_id($guest_id);
+            $log->set_client_data($client_data);
+            $this->logger_repository->add($log);
         } catch (Exception $e) {
-            throw new AddLogException($e->getMessage());
+            throw new Add_Log_Exception($e->get_message());
         }
     }
-
     /**
      * Get logs
      */
-    public function getLogs(): array
+    public function get_logs(): array
     {
-        return $this->LoggerRepository->findAll();
+        return $this->logger_repository->find_all();
     }
 }

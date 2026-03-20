@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare (strict_types=1);
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -19,53 +19,41 @@ declare(strict_types=1);
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License version 3.0
  */
+namespace Presta_Shop\Module\Psgdpr\Service\Back_Responder;
 
-namespace PrestaShop\Module\Psgdpr\Service\BackResponder;
-
-use PrestaShop\Module\Psgdpr\Repository\CustomerRepository;
-use PrestaShop\Module\Psgdpr\Service\CustomerService;
-use PrestaShop\Module\Psgdpr\Service\Export\ExportFactory;
-use PrestaShop\Module\Psgdpr\Service\ExportService;
-use PrestaShop\Module\Psgdpr\Service\LoggerService;
-
-abstract class BackResponderContext
+use Presta_Shop\Module\Psgdpr\Repository\Customer_Repository;
+use Presta_Shop\Module\Psgdpr\Service\Customer_Service;
+use Presta_Shop\Module\Psgdpr\Service\Export\Export_Factory;
+use Presta_Shop\Module\Psgdpr\Service\Export_Service;
+use Presta_Shop\Module\Psgdpr\Service\Logger_Service;
+abstract class Back_Responder_Context
 {
     /**
      * @var ExportFactory
      */
-    protected $exportFactory;
-
+    protected $export_factory;
     /**
      * @var CustomerRepository
      */
-    protected $customerRepository;
-
+    protected $customer_repository;
     /**
      * @var CustomerService
      */
-    protected $customerService;
-
+    protected $customer_service;
     /**
      * @var LoggerService
      */
-    protected $loggerService;
-
+    protected $logger_service;
     /**
      * @var ExportService
      */
-    protected $exportService;
-
-    public function __construct(
-        ExportFactory $exportFactory,
-        CustomerRepository $customerRepository,
-        CustomerService $customerService,
-        LoggerService $loggerService,
-        ExportService $exportService
-    ) {
-        $this->exportFactory = $exportFactory;
-        $this->customerRepository = $customerRepository;
-        $this->customerService = $customerService;
-        $this->loggerService = $loggerService;
-        $this->exportService = $exportService;
+    protected $export_service;
+    public function __construct(Export_Factory $export_factory, Customer_Repository $customer_repository, Customer_Service $customer_service, Logger_Service $logger_service, Export_Service $export_service)
+    {
+        $this->export_factory = $export_factory;
+        $this->customer_repository = $customer_repository;
+        $this->customer_service = $customer_service;
+        $this->logger_service = $logger_service;
+        $this->export_service = $export_service;
     }
 }

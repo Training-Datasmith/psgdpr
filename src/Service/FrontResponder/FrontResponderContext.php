@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare (strict_types=1);
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -19,37 +19,29 @@ declare(strict_types=1);
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License version 3.0
  */
+namespace Presta_Shop\Module\Psgdpr\Service\Front_Responder;
 
-namespace PrestaShop\Module\Psgdpr\Service\FrontResponder;
-
-use PrestaShop\Module\Psgdpr\Service\Export\ExportFactory;
-use PrestaShop\Module\Psgdpr\Service\ExportService;
-use PrestaShop\Module\Psgdpr\Service\LoggerService;
-
-abstract class FrontResponderContext
+use Presta_Shop\Module\Psgdpr\Service\Export\Export_Factory;
+use Presta_Shop\Module\Psgdpr\Service\Export_Service;
+use Presta_Shop\Module\Psgdpr\Service\Logger_Service;
+abstract class Front_Responder_Context
 {
     /**
      * @var ExportFactory
      */
-    protected $exportFactory;
-
+    protected $export_factory;
     /**
      * @var LoggerService
      */
-    protected $loggerService;
-
+    protected $logger_service;
     /**
      * @var ExportService
      */
-    protected $exportService;
-
-    public function __construct(
-        ExportFactory $exportFactory,
-        LoggerService $loggerService,
-        ExportService $exportService
-    ) {
-        $this->exportFactory = $exportFactory;
-        $this->loggerService = $loggerService;
-        $this->exportService = $exportService;
+    protected $export_service;
+    public function __construct(Export_Factory $export_factory, Logger_Service $logger_service, Export_Service $export_service)
+    {
+        $this->export_factory = $export_factory;
+        $this->logger_service = $logger_service;
+        $this->export_service = $export_service;
     }
 }

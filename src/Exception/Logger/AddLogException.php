@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare (strict_types=1);
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -19,12 +19,11 @@ declare(strict_types=1);
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License version 3.0
  */
-
-namespace PrestaShop\Module\Psgdpr\Exception\Logger;
+namespace Presta_Shop\Module\Psgdpr\Exception\Logger;
 
 /**
  * Is thrown when an error occurs during activity logger creation
  */
-class AddLogException extends LoggerException
+class Add_Log_Exception extends Logger_Exception
 {
 }

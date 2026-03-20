@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare (strict_types=1);
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -19,20 +19,17 @@ declare(strict_types=1);
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License version 3.0
  */
-
-namespace PrestaShop\Module\Psgdpr\Repository;
+namespace Presta_Shop\Module\Psgdpr\Repository;
 
 use Doctrine\DBAL\Connection;
 use Exception;
-use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\CustomerId;
-
-class OrderRepository
+use Presta_Shop\Presta_Shop\Core\Domain\Customer\Value_Object\Customer_Id;
+class Order_Repository
 {
     /**
      * @var Connection
      */
     private $connection;
-
     /**
      * OrderRepository constructor.
      */
@@ -40,36 +37,19 @@ class OrderRepository
     {
         $this->connection = $connection;
     }
-
     /**
      * Find customer cart products by customer id
      *
      *
      */
-    public function findProductsCartsNotOrderedByCustomerId(CustomerId $customerId): array
+    public function find_products_carts_not_ordered_by_customer_id(Customer_Id $customer_id): array
     {
         try {
-            $qb = $this->connection->createQueryBuilder();
-
-            $orderedProductQuery = $qb->select('1')
-                ->from(_DB_PREFIX_ . 'orders', 'order')
-                ->leftJoin('order', _DB_PREFIX_ . 'order_detail', 'detail', 'order.id_order = detail.id_order')
-                ->where('product_id = cart_product.id_product')
-                ->andWhere('order.valid = 1')
-                ->andWhere('order.id_customer = :id_customer')
-                ->getSQL();
-
-            $query = $qb->select('cart_product.id_product', 'cart.id_cart', 'cart.id_shop', 'cart_product.id_shop AS cart_product_id_shop')
-                ->from(_DB_PREFIX_ . 'cart_product', 'cart_product')
-                ->leftJoin('cart_product', _DB_PREFIX_ . 'cart', 'cart', 'cart.id_cart = cart_product.id_cart')
-                ->leftJoin('cart_product', _DB_PREFIX_ . 'product', 'product', 'cart_product.id_product = product.id_product')
-                ->where('cart.id_customer = :id_customer')
-                ->andWhere('NOT EXISTS (' . $orderedProductQuery . ')')
-                ->setParameter('id_customer', $customerId->getValue());
-
+            $qb = $this->connection->create_query_builder();
+            $ordered_product_query = $qb->select('1')->from(_DB_PREFIX_ . 'orders', 'order')->left_join('order', _DB_PREFIX_ . 'order_detail', 'detail', 'order.id_order = detail.id_order')->where('product_id = cart_product.id_product')->and_where('order.valid = 1')->and_where('order.id_customer = :id_customer')->get_sql();
+            $query = $qb->select('cart_product.id_product', 'cart.id_cart', 'cart.id_shop', 'cart_product.id_shop AS cart_product_id_shop')->from(_DB_PREFIX_ . 'cart_product', 'cart_product')->left_join('cart_product', _DB_PREFIX_ . 'cart', 'cart', 'cart.id_cart = cart_product.id_cart')->left_join('cart_product', _DB_PREFIX_ . 'product', 'product', 'cart_product.id_product = product.id_product')->where('cart.id_customer = :id_customer')->and_where('NOT EXISTS (' . $ordered_product_query . ')')->set_parameter('id_customer', $customer_id->get_value());
             $result = $query->execute();
-
-            return $result->fetchAllAssociative();
+            return $result->fetch_all_associative();
         } catch (Exception $e) {
             return [];
         }

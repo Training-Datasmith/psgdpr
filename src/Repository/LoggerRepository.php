@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare (strict_types=1);
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -19,41 +19,35 @@ declare(strict_types=1);
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License version 3.0
  */
+namespace Presta_Shop\Module\Psgdpr\Repository;
 
-namespace PrestaShop\Module\Psgdpr\Repository;
-
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\Persistence\ManagerRegistry;
-use PrestaShop\Module\Psgdpr\Entity\PsgdprLog;
-
-class LoggerRepository extends ServiceEntityRepository
+use Doctrine\Bundle\Doctrine_Bundle\Repository\Service_Entity_Repository;
+use Doctrine\Persistence\Manager_Registry;
+use Presta_Shop\Module\Psgdpr\Entity\Psgdpr_Log;
+class Logger_Repository extends Service_Entity_Repository
 {
-    public function __construct(ManagerRegistry $registry)
+    public function __construct(Manager_Registry $registry)
     {
-        parent::__construct($registry, PsgdprLog::class);
+        parent::__construct($registry, Psgdpr_Log::class);
     }
-
     /**
      * Add log to database
      *
      *
      */
-    public function add(PsgdprLog $log): void
+    public function add(Psgdpr_Log $log): void
     {
-        $this->getEntityManager()->persist($log);
-        $this->getEntityManager()->flush();
+        $this->get_entity_manager()->persist($log);
+        $this->get_entity_manager()->flush();
     }
-
     /**
      * Get all logs
      */
-    public function findAll(): array
+    public function find_all(): array
     {
-        $queryBuilder = $this->getEntityManager()->createQueryBuilder();
-        $query = $queryBuilder->select('*')->from(_DB_PREFIX_ . 'psgdpr_log', 'l');
-
-        $result = $this->getEntityManager()->getConnection()->executeQuery($query);
-
-        return $result->fetchAllAssociative();
+        $query_builder = $this->get_entity_manager()->create_query_builder();
+        $query = $query_builder->select('*')->from(_DB_PREFIX_ . 'psgdpr_log', 'l');
+        $result = $this->get_entity_manager()->get_connection()->execute_query($query);
+        return $result->fetch_all_associative();
     }
 }

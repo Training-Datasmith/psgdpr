@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare (strict_types=1);
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -19,51 +19,38 @@ declare(strict_types=1);
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License version 3.0
  */
-
-namespace PrestaShop\Module\Psgdpr\Service\FrontResponder\Strategy;
+namespace Presta_Shop\Module\Psgdpr\Service\Front_Responder\Strategy;
 
 use Exception;
-use PrestaShop\Module\Psgdpr\Exception\Customer\ExportException;
-use PrestaShop\Module\Psgdpr\Service\Export\Strategy\ExportToCsv;
-use PrestaShop\Module\Psgdpr\Service\FrontResponder\FrontResponderContext;
-use PrestaShop\Module\Psgdpr\Service\FrontResponder\FrontResponderInterface;
-use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\CustomerId;
-use Symfony\Component\HttpFoundation\Response;
-
-class FrontResponderForCsv extends FrontResponderContext implements FrontResponderInterface
+use Presta_Shop\Module\Psgdpr\Exception\Customer\Export_Exception;
+use Presta_Shop\Module\Psgdpr\Service\Export\Strategy\Export_To_Csv;
+use Presta_Shop\Module\Psgdpr\Service\Front_Responder\Front_Responder_Context;
+use Presta_Shop\Module\Psgdpr\Service\Front_Responder\Front_Responder_Interface;
+use Presta_Shop\Presta_Shop\Core\Domain\Customer\Value_Object\Customer_Id;
+use Symfony\Component\Http_Foundation\Response;
+class Front_Responder_For_Csv extends Front_Responder_Context implements Front_Responder_Interface
 {
     public const TYPE = 'csv';
-
     /**
      * export customer data to csv
      *
      *
      */
-    public function export(CustomerId $customerid): void
+    public function export(Customer_Id $customerid): void
     {
         try {
-            $csvName = 'personal-data-' . '_' . date('Y-m-d_His') . '.csv';
-
-            $exportStrategy = $this->exportFactory->getStrategyByType(ExportToCsv::TYPE);
-            $result = $this->exportService->exportCustomerData($customerid, $exportStrategy);
-
-            $headers = [
-                'Content-Type' => 'text/csv',
-                'Content-Disposition' => 'attachment; filename="' . $csvName . '";',
-                'Content-Transfer-Encoding' => 'binary',
-            ];
-
+            $csv_name = 'personal-data-' . '_' . date('Y-m-d_His') . '.csv';
+            $export_strategy = $this->export_factory->get_strategy_by_type(Export_To_Csv::TYPE);
+            $result = $this->export_service->export_customer_data($customerid, $export_strategy);
+            $headers = ['Content-Type' => 'text/csv', 'Content-Disposition' => 'attachment; filename="' . $csv_name . '";', 'Content-Transfer-Encoding' => 'binary'];
             $response = new Response($result);
             $response->headers->add($headers);
-
             $response->send();
-
-            exit();
+            exit;
         } catch (Exception $e) {
-            throw new ExportException('A problem occurred while exporting customer to csv. please try again');
+            throw new Export_Exception('A problem occurred while exporting customer to csv. please try again');
         }
     }
-
     public function supports(string $type): bool
     {
         return $type === self::TYPE;

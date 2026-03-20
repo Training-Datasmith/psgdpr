@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare (strict_types=1);
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -19,144 +19,103 @@ declare(strict_types=1);
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License version 3.0
  */
+namespace Presta_Shop\Module\Psgdpr\Repository;
 
-namespace PrestaShop\Module\Psgdpr\Repository;
-
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\Persistence\ManagerRegistry;
-use PrestaShop\Module\Psgdpr\Entity\PsgdprConsent;
-use PrestaShop\Module\Psgdpr\Entity\PsgdprConsentLang;
-
-class ConsentRepository extends ServiceEntityRepository
+use Doctrine\Bundle\Doctrine_Bundle\Repository\Service_Entity_Repository;
+use Doctrine\Persistence\Manager_Registry;
+use Presta_Shop\Module\Psgdpr\Entity\Psgdpr_Consent;
+use Presta_Shop\Module\Psgdpr\Entity\Psgdpr_Consent_Lang;
+class Consent_Repository extends Service_Entity_Repository
 {
-    public function __construct(ManagerRegistry $registry)
+    public function __construct(Manager_Registry $registry)
     {
-        parent::__construct($registry, PsgdprConsent::class);
+        parent::__construct($registry, Psgdpr_Consent::class);
     }
-
     /**
      * Add consent to database
      *
      *
      */
-    public function createOrUpdateConsent(PsgdprConsent $psgdprConsent): void
+    public function create_or_update_consent(Psgdpr_Consent $psgdpr_consent): void
     {
         /** @var PsgdprConsent|null $consent */
-        $consent = $this->findConsentByModuleId($psgdprConsent->getModuleId());
-
+        $consent = $this->find_consent_by_module_id($psgdpr_consent->get_module_id());
         if ($consent !== null) {
-            $consent->setActive($psgdprConsent->isActive());
-            $consent->setError($psgdprConsent->isError());
-            $consent->setErrorMessage($psgdprConsent->getErrorMessage());
-
+            $consent->set_active($psgdpr_consent->is_active());
+            $consent->set_error($psgdpr_consent->is_error());
+            $consent->set_error_message($psgdpr_consent->get_error_message());
             /** @var PsgdprConsentLang $consentLang */
-            foreach ($consent->getConsentLangs() as $consentLang) {
+            foreach ($consent->get_consent_langs() as $consent_lang) {
                 /** @var PsgdprConsentLang $psgdprConsentLang */
-                foreach ($psgdprConsent->getConsentLangs() as $psgdprConsentLang) {
-                    if ($consentLang->getLang() === $psgdprConsentLang->getLang()) {
-                        $consentLang->setMessage($psgdprConsentLang->getMessage());
+                foreach ($psgdpr_consent->get_consent_langs() as $psgdpr_consent_lang) {
+                    if ($consent_lang->get_lang() === $psgdpr_consent_lang->get_lang()) {
+                        $consent_lang->set_message($psgdpr_consent_lang->get_message());
                     }
                 }
             }
         } else {
-            $consent = $psgdprConsent;
+            $consent = $psgdpr_consent;
         }
-
-        $this->getEntityManager()->persist($consent);
-        $this->getEntityManager()->flush();
+        $this->get_entity_manager()->persist($consent);
+        $this->get_entity_manager()->flush();
     }
-
     /**
      * Find consent by module id
      *
      *
      * @return object|null
      */
-    public function findConsentByModuleId(int $moduleId)
+    public function find_consent_by_module_id(int $module_id)
     {
-        return $this->findOneBy([
-            'moduleId' => $moduleId,
-        ]);
+        return $this->find_one_by(['moduleId' => $module_id]);
     }
-
     /**
      * Find all registered modules for GDPR
      */
-    public function findAllRegisteredModules(): array
+    public function find_all_registered_modules(): array
     {
-        $queryBuilder = $this->getEntityManager()->getConnection()->createQueryBuilder();
-
-        $query = $queryBuilder->select('consent.id_gdpr_consent', 'consent.id_module')
-            ->from(_DB_PREFIX_ . 'psgdpr_consent', 'consent')
-            ->innerJoin('consent', _DB_PREFIX_ . 'module', 'module', 'module.id_module = consent.id_module')
-            ->orderBy('consent.id_gdpr_consent', 'DESC');
-
+        $query_builder = $this->get_entity_manager()->get_connection()->create_query_builder();
+        $query = $query_builder->select('consent.id_gdpr_consent', 'consent.id_module')->from(_DB_PREFIX_ . 'psgdpr_consent', 'consent')->inner_join('consent', _DB_PREFIX_ . 'module', 'module', 'module.id_module = consent.id_module')->order_by('consent.id_gdpr_consent', 'DESC');
         $data = $query->execute();
-
-        return $data->fetchAllAssociative();
+        return $data->fetch_all_associative();
     }
-
     /**
      * Find consent message for module
      *
      *
      */
-    public function findModuleConsentMessage(int $moduleId, int $langId): string
+    public function find_module_consent_message(int $module_id, int $lang_id): string
     {
-        $queryBuilder = $this->getEntityManager()->getConnection()->createQueryBuilder();
-
-        $query = $queryBuilder->select('consent_lang.message')
-            ->from(_DB_PREFIX_ . 'psgdpr_consent', 'consent')
-            ->leftJoin('consent', _DB_PREFIX_ . 'psgdpr_consent_lang', 'consent_lang', 'consent.id_gdpr_consent = consent_lang.id_gdpr_consent')
-            ->where('consent.id_module = :id_module')
-            ->andWhere('consent_lang.id_lang = :id_lang')
-            ->setParameter('id_module', $moduleId)
-            ->setParameter('id_lang', $langId);
-
-        $queryResult = $query->execute();
-        $data = $queryResult->fetchOne();
-
+        $query_builder = $this->get_entity_manager()->get_connection()->create_query_builder();
+        $query = $query_builder->select('consent_lang.message')->from(_DB_PREFIX_ . 'psgdpr_consent', 'consent')->left_join('consent', _DB_PREFIX_ . 'psgdpr_consent_lang', 'consent_lang', 'consent.id_gdpr_consent = consent_lang.id_gdpr_consent')->where('consent.id_module = :id_module')->and_where('consent_lang.id_lang = :id_lang')->set_parameter('id_module', $module_id)->set_parameter('id_lang', $lang_id);
+        $query_result = $query->execute();
+        $data = $query_result->fetch_one();
         return $data ?: '';
     }
-
     /**
      * Find consent active for module
      *
      *
      */
-    public function findModuleConsentIsActive(int $moduleId): bool
+    public function find_module_consent_is_active(int $module_id): bool
     {
-        $queryBuilder = $this->getEntityManager()->getConnection()->createQueryBuilder();
-
-        $query = $queryBuilder->select('consent.active')
-            ->from(_DB_PREFIX_ . 'psgdpr_consent', 'consent')
-            ->where('consent.id_module = :id_module')
-            ->setParameter('id_module', $moduleId);
-
-        $queryResult = $query->execute();
-        $data = $queryResult->fetchAssociative();
-
+        $query_builder = $this->get_entity_manager()->get_connection()->create_query_builder();
+        $query = $query_builder->select('consent.active')->from(_DB_PREFIX_ . 'psgdpr_consent', 'consent')->where('consent.id_module = :id_module')->set_parameter('id_module', $module_id);
+        $query_result = $query->execute();
+        $data = $query_result->fetch_associative();
         return !empty($data['active']);
     }
-
     /**
      * Find consent exist for module
      *
      *
      */
-    public function findModuleConsentExist(int $moduleId): bool
+    public function find_module_consent_exist(int $module_id): bool
     {
-        $queryBuilder = $this->getEntityManager()->getConnection()->createQueryBuilder();
-
-        $query = $queryBuilder->select('id_module')
-            ->from(_DB_PREFIX_ . 'psgdpr_consent', 'consent')
-            ->leftJoin('consent', _DB_PREFIX_ . 'psgdpr_consent_lang', 'consent_lang', 'consent.id_gdpr_consent = consent_lang.id_gdpr_consent')
-            ->where('consent.id_module = :id_module')
-            ->setParameter('id_module', $moduleId);
-
-        $queryResult = $query->execute();
-        $data = $queryResult->fetchOne();
-
+        $query_builder = $this->get_entity_manager()->get_connection()->create_query_builder();
+        $query = $query_builder->select('id_module')->from(_DB_PREFIX_ . 'psgdpr_consent', 'consent')->left_join('consent', _DB_PREFIX_ . 'psgdpr_consent_lang', 'consent_lang', 'consent.id_gdpr_consent = consent_lang.id_gdpr_consent')->where('consent.id_module = :id_module')->set_parameter('id_module', $module_id);
+        $query_result = $query->execute();
+        $data = $query_result->fetch_one();
         return $data ? true : false;
     }
 }

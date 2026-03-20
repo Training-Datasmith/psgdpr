@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare (strict_types=1);
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -19,16 +19,12 @@ declare(strict_types=1);
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License version 3.0
  */
+namespace Presta_Shop\Module\Psgdpr\Service\Back_Responder;
 
-namespace PrestaShop\Module\Psgdpr\Service\BackResponder;
-
-use Symfony\Component\HttpFoundation\Response;
-
-interface BackResponderInterface
+use Symfony\Component\Http_Foundation\Response;
+interface Back_Responder_Interface
 {
     public function export(string $data): Response;
-
     public function delete(string $data): Response;
-
     public function supports(string $type): bool;
 }
