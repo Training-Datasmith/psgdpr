@@ -8,77 +8,77 @@ services:
     arguments:
       - "psgdpr"
 
-  PrestaShop\Module\Psgdpr\Repository\LoggerRepository:
-    class: 'PrestaShop\Module\Psgdpr\Repository\LoggerRepository'
+  Presta_Shop\Module\Psgdpr\Repository\Logger_Repository:
+    class: 'Presta_Shop\Module\Psgdpr\Repository\Logger_Repository'
     arguments:
       - "@Doctrine\\Persistence\\ManagerRegistry"
 
-  PrestaShop\Module\Psgdpr\Repository\CustomerRepository:
-    class: 'PrestaShop\Module\Psgdpr\Repository\CustomerRepository'
+  Presta_Shop\Module\Psgdpr\Repository\Customer_Repository:
+    class: 'Presta_Shop\Module\Psgdpr\Repository\Customer_Repository'
     arguments:
       - "@doctrine.dbal.default_connection"
 
-  PrestaShop\Module\Psgdpr\Service\LoggerService:
-    class: 'PrestaShop\Module\Psgdpr\Service\LoggerService'
+  Presta_Shop\Module\Psgdpr\Service\Logger_Service:
+    class: 'Presta_Shop\Module\Psgdpr\Service\Logger_Service'
     arguments:
       - "@PrestaShop\\Module\\Psgdpr\\Repository\\LoggerRepository"
       - "@PrestaShop\\Module\\Psgdpr\\Repository\\CustomerRepository"
 
-  PrestaShop\Module\Psgdpr\Service\ExportService:
-    class: 'PrestaShop\Module\Psgdpr\Service\ExportService'
+  Presta_Shop\Module\Psgdpr\Service\Export_Service:
+    class: 'Presta_Shop\Module\Psgdpr\Service\Export_Service'
     arguments:
       - '@=service("prestashop.adapter.legacy.context").getContext()'
       - '@=service("Psgdpr").getTranslator()'
 
-  PrestaShop\Module\Psgdpr\Service\Export\ExportFactory:
-    class: 'PrestaShop\Module\Psgdpr\Service\Export\ExportFactory'
+  Presta_Shop\Module\Psgdpr\Service\Export\Export_Factory:
+    class: 'Presta_Shop\Module\Psgdpr\Service\Export\Export_Factory'
     arguments:
       - !tagged_iterator psgdpr.export.customerData
 
-  PrestaShop\Module\Psgdpr\Service\Export\Strategy\ExportToCsv:
-    class: 'PrestaShop\Module\Psgdpr\Service\Export\Strategy\ExportToCsv'
+  Presta_Shop\Module\Psgdpr\Service\Export\Strategy\Export_To_Csv:
+    class: 'Presta_Shop\Module\Psgdpr\Service\Export\Strategy\Export_To_Csv'
     tags: ["psgdpr.export.customerData"]
     arguments:
       - '@=service("prestashop.adapter.legacy.context").getContext()'
-      - '@PrestaShop\Module\Psgdpr\Service\LoggerService'
+      - '@Presta_Shop\Module\Psgdpr\Service\Logger_Service'
 
-  PrestaShop\Module\Psgdpr\Service\Export\Strategy\ExportToPdf:
-    class: 'PrestaShop\Module\Psgdpr\Service\Export\Strategy\ExportToPdf'
+  Presta_Shop\Module\Psgdpr\Service\Export\Strategy\Export_To_Pdf:
+    class: 'Presta_Shop\Module\Psgdpr\Service\Export\Strategy\Export_To_Pdf'
     tags: ["psgdpr.export.customerData"]
     arguments:
       - '@=service("prestashop.adapter.legacy.context").getContext()'
-      - '@PrestaShop\Module\Psgdpr\Service\LoggerService'
+      - '@Presta_Shop\Module\Psgdpr\Service\Logger_Service'
 
-  PrestaShop\Module\Psgdpr\Service\Export\Strategy\ExportToJson:
-    class: 'PrestaShop\Module\Psgdpr\Service\Export\Strategy\ExportToJson'
+  Presta_Shop\Module\Psgdpr\Service\Export\Strategy\Export_To_Json:
+    class: 'Presta_Shop\Module\Psgdpr\Service\Export\Strategy\Export_To_Json'
     tags: ["psgdpr.export.customerData"]
     arguments:
       - '@=service("prestashop.adapter.legacy.context").getContext()'
-      - '@PrestaShop\Module\Psgdpr\Service\LoggerService'
+      - '@Presta_Shop\Module\Psgdpr\Service\Logger_Service'
 
-  PrestaShop\Module\Psgdpr\Service\FrontResponder\FrontResponderFactory:
-    class: 'PrestaShop\Module\Psgdpr\Service\FrontResponder\FrontResponderFactory'
+  Presta_Shop\Module\Psgdpr\Service\Front_Responder\Front_Responder_Factory:
+    class: 'Presta_Shop\Module\Psgdpr\Service\Front_Responder\Front_Responder_Factory'
     arguments:
       - !tagged_iterator psgdpr.frontResponder
 
-  PrestaShop\Module\Psgdpr\Service\FrontResponder\Strategy\FrontResponderForCsv:
-    class: 'PrestaShop\Module\Psgdpr\Service\FrontResponder\Strategy\FrontResponderForCsv'
+  Presta_Shop\Module\Psgdpr\Service\Front_Responder\Strategy\Front_Responder_For_Csv:
+    class: 'Presta_Shop\Module\Psgdpr\Service\Front_Responder\Strategy\Front_Responder_For_Csv'
     tags: ["psgdpr.frontResponder"]
     arguments:
-      - '@PrestaShop\Module\Psgdpr\Service\Export\ExportFactory'
-      - '@PrestaShop\Module\Psgdpr\Service\LoggerService'
-      - '@PrestaShop\Module\Psgdpr\Service\ExportService'
+      - '@Presta_Shop\Module\Psgdpr\Service\Export\Export_Factory'
+      - '@Presta_Shop\Module\Psgdpr\Service\Logger_Service'
+      - '@Presta_Shop\Module\Psgdpr\Service\Export_Service'
 
-  PrestaShop\Module\Psgdpr\Service\FrontResponder\Strategy\FrontResponderForPdf:
-    class: 'PrestaShop\Module\Psgdpr\Service\FrontResponder\Strategy\FrontResponderForPdf'
+  Presta_Shop\Module\Psgdpr\Service\Front_Responder\Strategy\Front_Responder_For_Pdf:
+    class: 'Presta_Shop\Module\Psgdpr\Service\Front_Responder\Strategy\Front_Responder_For_Pdf'
     tags: ["psgdpr.frontResponder"]
     arguments:
-      - '@PrestaShop\Module\Psgdpr\Service\Export\ExportFactory'
-      - '@PrestaShop\Module\Psgdpr\Service\LoggerService'
-      - '@PrestaShop\Module\Psgdpr\Service\ExportService'
+      - '@Presta_Shop\Module\Psgdpr\Service\Export\Export_Factory'
+      - '@Presta_Shop\Module\Psgdpr\Service\Logger_Service'
+      - '@Presta_Shop\Module\Psgdpr\Service\Export_Service'
 
-  PrestaShop\Module\Psgdpr\Repository\ConsentRepository:
-    class: 'PrestaShop\Module\Psgdpr\Repository\ConsentRepository'
+  Presta_Shop\Module\Psgdpr\Repository\Consent_Repository:
+    class: 'Presta_Shop\Module\Psgdpr\Repository\Consent_Repository'
     public: true
     arguments:
       - "@Doctrine\\Persistence\\ManagerRegistry"

@@ -2,16 +2,16 @@ services:
   _defaults:
     public: false
 
-  PrestaShop\Module\Psgdpr\Controller\Admin\CustomerController:
-    class: 'PrestaShop\Module\Psgdpr\Controller\Admin\CustomerController'
+  Presta_Shop\Module\Psgdpr\Controller\Admin\Customer_Controller:
+    class: 'Presta_Shop\Module\Psgdpr\Controller\Admin\Customer_Controller'
     public: true
     arguments:
       - "@prestashop.core.query_bus"
-      - '@PrestaShop\Module\Psgdpr\Repository\OrderInvoiceRepository'
-      - '@PrestaShop\Module\Psgdpr\Service\BackResponder\BackResponderFactory'
+      - '@Presta_Shop\Module\Psgdpr\Repository\Order_Invoice_Repository'
+      - '@Presta_Shop\Module\Psgdpr\Service\Back_Responder\Back_Responder_Factory'
 
-  PrestaShop\Module\Psgdpr\Controller\Admin\DownloadCustomerInvoicesController:
-    class: 'PrestaShop\Module\Psgdpr\Controller\Admin\DownloadCustomerInvoicesController'
+  Presta_Shop\Module\Psgdpr\Controller\Admin\Download_Customer_Invoices_Controller:
+    class: 'Presta_Shop\Module\Psgdpr\Controller\Admin\Download_Customer_Invoices_Controller'
     public: true
     arguments:
-      - '@PrestaShop\Module\Psgdpr\Repository\OrderInvoiceRepository'
+      - '@Presta_Shop\Module\Psgdpr\Repository\Order_Invoice_Repository'
